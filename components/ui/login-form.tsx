@@ -14,8 +14,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { notifyFailure } from "./ui/toast";
+import { notifyFailure } from "./toast";
 import { loginUser } from "@/app/auth/actions";
+import FormFieldCustom from "./formFieldCustom";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -70,36 +71,8 @@ export function LoginForm() {
           }
         }}
       >
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input placeholder="Email" {...field} name="email" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormControl>
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  {...field}
-                  name="password"
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <FormFieldCustom name="email" placeholder="Email" form={form} />
+        <FormFieldCustom name="password" placeholder="Password" form={form} />
         {state?.error && (
           <div className="text-sm font-medium text-destructive">
             {state.error}
