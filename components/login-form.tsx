@@ -1,0 +1,112 @@
+"use client";
+
+import { useFormState, useFormStatus } from "react-dom";
+import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { notifyFailure } from "./ui/toast";
+import { loginUser } from "@/app/auth/actions";
+
+const formSchema = z.object({
+  email: z.string().email({
+    message: "Please enter a valid email.",
+  }),
+  password: z.string().min(2, {
+    message: "Password must be at least 2 characters.",
+  }),
+});
+
+//useFormStatus mora se pozivati unutar funkcije i zato je gumb ovak
+function SubmitButton() {
+  const { pending } = useFormStatus();
+  return (
+    <Button
+      className="w-full"
+      variant={"darker"}
+      type="submit"
+      disabled={pending}
+    >
+      {pending ? "Logging in..." : "Login"}
+    </Button>
+  );
+}
+
+export function LoginForm() {
+  const [state, formAction] = useFormState(loginUser, null);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  useEffect(() => {
+    if (state?.error) {
+      notifyFailure("Something went wrong");
+    }
+  }, [state]);
+
+  return (
+    <Form {...form}>
+      <form
+        action={formAction}
+        className="space-y-4"
+        onSubmit={(e) => {
+          const isValid = form.trigger();
+          if (!isValid) {
+            e.preventDefault();
+          }
+        }}
+      >
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input placeholder="Email" {...field} name="email" />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormControl>
+                <Input
+                  type="password"
+                  placeholder="Password"
+                  {...field}
+                  name="password"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        {state?.error && (
+          <div className="text-sm font-medium text-destructive">
+            {state.error}
+          </div>
+        )}
+        <SubmitButton />
+      </form>
+    </Form>
+  );
+}
