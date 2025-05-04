@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { FacebookLogo, InstagramLogo, XLogo } from "@phosphor-icons/react";
 
