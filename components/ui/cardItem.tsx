@@ -1,0 +1,66 @@
+import { prisma } from "@/lib/prisma";
+import CardItemClient from "./cardItemClient";
+import {
+  calculateAverageRating,
+  getSignedImageUrl,
+} from "@/app/common/globals";
+
+type CardItemProps = {
+  data: {
+    id: number;
+    name: string;
+    image?: string;
+    avgRating?: number;
+    reviews?: any[];
+    city?: {
+      name: string;
+      country?: {
+        name: string;
+      };
+    };
+  };
+};
+
+async function CardItem({ data }: CardItemProps) {
+  let imageUrl = data.image;
+
+  if (!imageUrl) {
+    const beachImages = await prisma.images.findMany({
+      where: {
+        beach_id: data.id,
+      },
+      take: 1,
+    });
+
+    if (beachImages && beachImages.length > 0) {
+      const signedUrl = await getSignedImageUrl(beachImages[0].path);
+      if (signedUrl) {
+        imageUrl = signedUrl;
+      }
+    }
+  }
+
+  if (!imageUrl) {
+    imageUrl = "/placeholder-beach.jpg";
+  }
+
+  const rating =
+    data.avgRating !== undefined
+      ? data.avgRating
+      : data.reviews
+      ? calculateAverageRating(data.reviews)
+      : 0;
+
+  return (
+    <CardItemClient
+      id={data.id}
+      name={data.name}
+      image={imageUrl}
+      rating={rating}
+      cityName={data.city?.name}
+      countryName={data.city?.country?.name}
+    />
+  );
+}
+
+export default CardItem;
