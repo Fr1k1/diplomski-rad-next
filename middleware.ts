@@ -5,6 +5,7 @@ export async function middleware(request: NextRequest) {
   return await updateSession(request);
 }
 export const config = {
+  //tu su one di ocu da se izvrsava
   matcher: [
     /*
      * Match all request paths except:
@@ -17,6 +18,6 @@ export const config = {
     "/add-beach",
     "/beach-requests/:path*",
     "/beach/:path*/add-review",
-    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+    // "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

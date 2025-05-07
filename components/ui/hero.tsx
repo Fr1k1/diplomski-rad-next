@@ -3,21 +3,24 @@ import { useEffect, useState } from "react";
 import HeroImage from "../../app/assets/hero_image.svg";
 import Image from "next/image";
 const Hero = () => {
-  const [isDesktop, setDesktop] = useState(window.innerWidth >= 1024);
+  const [isDesktop, setDesktop] = useState<boolean | null>(null);
+  //tu napisi u diplomskom kak se mora drukcije postavljati vrijednosti
 
-  const updateMedia = () => {
-    setDesktop(window.innerWidth >= 1024);
-  };
-  //ne koristim ga za fetch tak da nije problem
   useEffect(() => {
+    setDesktop(window.innerWidth >= 1024);
+
+    const updateMedia = () => {
+      setDesktop(window.innerWidth >= 1024);
+    };
+
     window.addEventListener("resize", updateMedia);
     return () => window.removeEventListener("resize", updateMedia);
-  });
+  }, []);
 
   return (
     <div className="flex flex-col items-center justify-center lg:grid lg:grid-cols-2 lg:max-w-screen-2xl m-auto p-4">
       <div>
-        <Image src={HeroImage} alt="" className="lg:w-full" />
+        <Image src={HeroImage} alt="" className="lg:w-full" priority />
       </div>
       <div className="flex flex-col items-center justify-center gap-5">
         <div className="text-center">
