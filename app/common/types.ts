@@ -53,11 +53,11 @@ export interface BeachDetailsData {
   beach_depth: { description: string };
   beach_texture: { name: string; img_url: string };
   beach_type: { name: string };
-  city: {
+  cities: {
     name: string;
     latitude: string;
     longitude: string;
-    country: { name: string };
+    countries: { name: string };
   };
   reviews: Array<{
     title: string;
@@ -65,7 +65,7 @@ export interface BeachDetailsData {
     rating: number;
     user: { first_name: string; last_name: string };
   }>;
-  user?: { first_name: string; last_name: string };
+  users?: { first_name: string; last_name: string };
   avgRating?: number;
 }
 
