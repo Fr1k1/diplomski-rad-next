@@ -48,7 +48,10 @@ export const updateSession = async (request: NextRequest) => {
       return NextResponse.redirect(new URL("/login", request.url));
     }
 
-    if (request.nextUrl.pathname.startsWith("/beach-requests") && user) {
+    if (request.nextUrl.pathname.startsWith("/beach-requests")) {
+      if (!user) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
       const { data: userData } = await supabase
         .from("users")
         .select("is_admin")
