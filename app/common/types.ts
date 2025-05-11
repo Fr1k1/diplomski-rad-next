@@ -76,7 +76,7 @@ export interface Image {
 export interface Review {
   id?: number;
   title: string;
-  description: string;
+  description: string | null;
   rating: number;
   userId?: string;
   user?: { first_name: string; last_name: string };
