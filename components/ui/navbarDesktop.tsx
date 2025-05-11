@@ -14,10 +14,6 @@ const NavbarDesktop = ({
 }) => {
   const supabase = createClient();
 
-  useEffect(() => {
-    console.log("Is logged in mi je na navbaru", isLoggedIn);
-  });
-
   return (
     <div className="flex justify-between p-3 w-full items-center ">
       <div>
