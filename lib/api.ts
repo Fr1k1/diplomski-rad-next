@@ -149,9 +149,6 @@ export async function getBeachById(id: number) {
         },
       },
     });
-
-    console.log("Plaza s backenda je", beach);
-
     const imageUrls = [];
     if (beach?.images && beach.images.length > 0) {
       const supabase = createClient();
