@@ -4,7 +4,7 @@ import MapSearcher from "@/components/ui/mapSearcher";
 import { prisma } from "@/lib/prisma";
 import { City } from "./types/City";
 import { getBeachesByType, getCitiesByCountry } from "@/lib/api";
-import { calculateAverageRating } from "./common/globals";
+import { calculateAverageRating } from "./common/utils";
 
 export default async function Home({
   params,

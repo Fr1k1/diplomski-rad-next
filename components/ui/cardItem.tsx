@@ -1,9 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import CardItemClient from "./cardItemClient";
-import {
-  calculateAverageRating,
-  getSignedImageUrl,
-} from "@/app/common/globals";
+import { getSignedImageUrlServer } from "@/app/common/storage";
+import { calculateAverageRating } from "@/app/common/utils";
 
 type CardItemProps = {
   data: {
@@ -33,7 +31,7 @@ async function CardItem({ data }: CardItemProps) {
     });
 
     if (beachImages && beachImages.length > 0) {
-      const signedUrl = await getSignedImageUrl(beachImages[0].path);
+      const signedUrl = await getSignedImageUrlServer(beachImages[0].path);
       if (signedUrl) {
         imageUrl = signedUrl;
       }

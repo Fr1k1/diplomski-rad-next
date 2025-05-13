@@ -2,13 +2,15 @@ import Title from "./title";
 import { Button } from "./button";
 import BeachDetailsReviewCard from "./beachDetailsReviewCard";
 import { Review } from "@/app/common/types";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
-const BeachDetailsReviews = ({ reviews }: { reviews?: Array<Review> }) => {
-  const router = useRouter();
-  const { id } = router.query;
-
+const BeachDetailsReviews = ({
+  reviews,
+  beachId,
+}: {
+  reviews?: Array<Review>;
+  beachId: string | number;
+}) => {
   if (reviews === undefined) {
     return null;
   }
@@ -21,7 +23,7 @@ const BeachDetailsReviews = ({ reviews }: { reviews?: Array<Review> }) => {
         <Title>Reviews</Title>
         {hasReviews && (
           <Link
-            href={`/beach/${id}/reviews`}
+            href={`/beach/${beachId}/reviews`}
             className="text-primary-800 underline text-base "
           >
             More
@@ -43,7 +45,7 @@ const BeachDetailsReviews = ({ reviews }: { reviews?: Array<Review> }) => {
       </div>
 
       <div className="flex flex-end justify-end mt-4">
-        <Link href={`/beach/${id}/add-review`} passHref>
+        <Link href={`/beach/${beachId}/add-review`} passHref>
           <Button variant={"darker"} underlined>
             Leave a review
           </Button>

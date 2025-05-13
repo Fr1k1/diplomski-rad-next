@@ -1,11 +1,8 @@
-import "react-responsive-carousel/lib/styles/carousel.min.css";
-import "./Carousel.scss";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
-import CarouselClient from "./carouseClient";
+import CarouselClient from "./carouselClient";
 
-async function Carousel({ beachId }: { beachId: string }) {
-  const supabase = createClient();
+export default async function CarouselServer({ beachId }: { beachId: string }) {
   const beach = await prisma.beaches.findUnique({
     where: { id: Number(beachId) },
     include: {
@@ -17,6 +14,7 @@ async function Carousel({ beachId }: { beachId: string }) {
 
   const beachImages = beach?.images || [];
 
+  const supabase = createClient();
   const imageUrlPromises = beachImages.map(async (image) => {
     const { data, error } = await supabase.storage
       .from("beach_images")
@@ -35,5 +33,3 @@ async function Carousel({ beachId }: { beachId: string }) {
 
   return <CarouselClient imageUrls={validUrls} />;
 }
-
-export default Carousel;

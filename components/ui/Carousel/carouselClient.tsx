@@ -2,11 +2,10 @@
 
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel as ReactCarousel } from "react-responsive-carousel";
-import "./Carousel.scss";
 import Image from "next/image";
 
-export default function CarouselClient({ imageUrls }: { imageUrls: string[] }) {
-  if (imageUrls.length === 0) {
+export default function CarouselClient({ imageUrls }) {
+  if (!imageUrls || imageUrls.length === 0) {
     return <div>No images available</div>;
   }
 

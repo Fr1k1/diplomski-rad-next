@@ -5,7 +5,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 
-const BaechDetailsAccordion = ({
+const BeachDetailsAccordion = ({
   bestTimeToVisit,
   localWildlife,
   restaurantsAndBars,
@@ -34,4 +34,4 @@ const BaechDetailsAccordion = ({
   );
 };
 
-export default BaechDetailsAccordion;
+export default BeachDetailsAccordion;
