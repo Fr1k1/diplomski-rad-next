@@ -113,3 +113,117 @@ export async function getBeachGeoDataById(id: string) {
     return null;
   }
 }
+
+export async function addBeach(prevState: any, formData: FormData) {
+  try {
+    const name = formData.get("name") as string;
+    const address = formData.get("address") as string;
+    const beachTypeId = formData.get("beachTypeId") as string;
+    const beachDepthId = formData.get("beachDepthId") as string;
+    const beachTextureId = formData.get("beachTextureId") as string;
+    const cityId = formData.get("cityId") as string;
+    const working_hours = formData.get("working_hours") as string;
+    const description = formData.get("description") as string;
+    const best_time_to_visit = formData.get("best_time_to_visit") as string;
+    const local_wildlife = formData.get("local_wildlife") as string;
+    const restaurants_and_bars_nearby = formData.get(
+      "restaurants_and_bars_nearby"
+    ) as string;
+    const characteristics = formData.getAll("characteristics") as string[];
+    const featured_items = formData.getAll("featured_items") as string[];
+    const userId = formData.get("userId") as string;
+    const beach = await prisma.beaches.create({
+      data: {
+        name,
+        address,
+        beach_type_id: Number(beachTypeId),
+        beach_depth_id: Number(beachDepthId),
+        beach_texture_id: Number(beachTextureId),
+        city_id: Number(cityId),
+        working_hours,
+        description,
+        best_time_to_visit,
+        local_wildlife,
+        restaurants_and_bars_nearby,
+        user_id: userId,
+        approved: false,
+      },
+    });
+
+    if (characteristics.length > 0) {
+      await Promise.all(
+        characteristics.map((charId) =>
+          prisma.beach_has_characteristics.create({
+            data: {
+              featured: false,
+              beaches: {
+                connect: { id: beach.id },
+              },
+              characteristics: {
+                connect: { id: Number(charId) },
+              },
+            },
+          })
+        )
+      );
+    }
+
+    if (featured_items.length > 0) {
+      await Promise.all(
+        featured_items.map((itemId) =>
+          prisma.beach_has_characteristics.create({
+            data: {
+              featured: true,
+              beaches: {
+                connect: { id: beach.id },
+              },
+              characteristics: {
+                connect: { id: Number(itemId) },
+              },
+            },
+          })
+        )
+      );
+    }
+    return { success: true, data: beach };
+  } catch (error) {
+    console.error("Error adding beach:", error);
+    return { success: false, error: "Failed to add beach" };
+  }
+}
+
+// export async function uploadImages(beachId: string, files: File[]) {
+//   try {
+//     const uploadedImageIds: string[] = [];
+
+//     for (const file of files) {
+//       const { data, error } = await supabase.storage
+//         .from("beach_images")
+//         .upload(`beaches/${beachId}/${file.name}`, file, {
+//           cacheControl: "3600",
+//           upsert: false,
+//         });
+
+//       if (error) {
+//         console.error("Error uploading image:", error);
+//         continue;
+//       }
+
+//       const { error: insertError } = await supabase.from("images").insert({
+//         beach_id: beachId,
+//         path: data?.path,
+//       });
+
+//       if (insertError) {
+//         console.error("Error inserting image record:", insertError);
+//       } else {
+//         uploadedImageIds.push(data?.path);
+//       }
+//     }
+
+//     return { success: true, imageIds: uploadedImageIds };
+//   } catch (error) {
+//     console.error("Error uploading images:", error);
+//     return { success: false, error: "Failed to upload images" };
+//   }
+// }

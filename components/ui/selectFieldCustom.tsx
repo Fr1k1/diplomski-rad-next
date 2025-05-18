@@ -87,6 +87,8 @@ const SelectFieldCustom = <T extends FieldValues>({
                                 src={option.icon_url}
                                 alt={option?.name}
                                 className="w-6 h-6"
+                                width={24}
+                                height={24}
                               />
                             </div>
                           )}

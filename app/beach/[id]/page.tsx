@@ -1,6 +1,6 @@
-import { getBeachById } from "@/lib/api";
 import BeachDetailsClient from "@/components/ui/BeachDetailsClient";
 import { prisma } from "@/lib/prisma";
+import { getBeachById } from "@/lib/serverFunctions";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function BeachDetailsPage({ params }) {

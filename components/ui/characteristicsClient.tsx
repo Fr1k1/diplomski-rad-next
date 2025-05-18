@@ -7,7 +7,7 @@ import { Label } from "./label";
 import { Characteristic } from "@/app/types/Characteristic";
 
 interface CharacteristicsClientProps {
-  characteristics: Characteristic[];
+  characteristics: Characteristic[] | null;
   form?: UseFormReturn<any>;
 }
 
@@ -52,7 +52,7 @@ const CharacteristicsClient: React.FC<CharacteristicsClientProps> = ({
 
   return (
     <div className="grid grid-cols-3 gap-4 md:grid-cols-4 lg:grid-cols-7 lg:gap-6">
-      {characteristics.map((characteristic: Characteristic) => {
+      {characteristics?.map((characteristic: Characteristic) => {
         const isSelected = selectedCharacteristics.includes(
           String(characteristic.id)
         );
