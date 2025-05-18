@@ -1,6 +1,7 @@
 "use server";
 
 import { prisma } from "@/lib/prisma";
+import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -132,6 +133,7 @@ export async function addBeach(prevState: any, formData: FormData) {
     const characteristics = formData.getAll("characteristics") as string[];
     const featured_items = formData.getAll("featured_items") as string[];
     const userId = formData.get("userId") as string;
+
     const beach = await prisma.beaches.create({
       data: {
         name,
@@ -185,6 +187,21 @@ export async function addBeach(prevState: any, formData: FormData) {
         )
       );
     }
+
+    const filePromises = [];
+
+    for (let i = 0; i < 10; i++) {
+      const fileKey = `picture-${i}`;
+      const file = formData.get(fileKey) as File;
+
+      if (file && file instanceof File && file.size > 0) {
+        filePromises.push(uploadImages(beach.id, file));
+      }
+    }
+
+    if (filePromises.length > 0) {
+      await Promise.all(filePromises);
+    }
     return { success: true, data: beach };
   } catch (error) {
     console.error("Error adding beach:", error);
@@ -192,38 +209,41 @@ export async function addBeach(prevState: any, formData: FormData) {
   }
 }
 
-// export async function uploadImages(beachId: string, files: File[]) {
-//   try {
-//     const uploadedImageIds: string[] = [];
+export async function uploadImages(beachId: number, filesInput: File | File[]) {
+  const supabase = createClient();
+  try {
+    const uploadedImageIds: string[] = [];
 
-//     for (const file of files) {
-//       const { data, error } = await supabase.storage
-//         .from("beach_images")
-//         .upload(`beaches/${beachId}/${file.name}`, file, {
-//           cacheControl: "3600",
-//           upsert: false,
-//         });
+    const files = Array.isArray(filesInput) ? filesInput : [filesInput];
 
-//       if (error) {
-//         console.error("Error uploading image:", error);
-//         continue;
-//       }
+    for (const file of files) {
+      const { data, error } = await supabase.storage
+        .from("beach_images")
+        .upload(`beaches/${beachId}/${file.name}`, file, {
+          cacheControl: "3600",
+          upsert: false,
+        });
 
-//       const { error: insertError } = await supabase.from("images").insert({
-//         beach_id: beachId,
-//         path: data?.path,
-//       });
+      if (error) {
+        console.error("Error uploading image:", error);
+        continue;
+      }
 
-//       if (insertError) {
-//         console.error("Error inserting image record:", insertError);
-//       } else {
-//         uploadedImageIds.push(data?.path);
-//       }
-//     }
+      const { error: insertError } = await supabase.from("images").insert({
+        beach_id: beachId,
+        path: data?.path,
+      });
 
-//     return { success: true, imageIds: uploadedImageIds };
-//   } catch (error) {
-//     console.error("Error uploading images:", error);
-//     return { success: false, error: "Failed to upload images" };
-//   }
-// }
+      if (insertError) {
+        console.error("Error inserting image record:", insertError);
+      } else {
+        uploadedImageIds.push(data?.path);
+      }
+    }
+
+    return { success: true, imageIds: uploadedImageIds };
+  } catch (error) {
+    console.error("Error uploading images:", error);
+    return { success: false, error: "Failed to upload images" };
+  }
+}

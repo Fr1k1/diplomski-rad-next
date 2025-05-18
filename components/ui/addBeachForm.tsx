@@ -31,7 +31,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusCircle } from "@phosphor-icons/react";
 import FileInput from "./fileInput";
 import BeachTips from "./beachTips";
-import { getCitiesByCountry } from "@/lib/api";
 import { notifyFailure, notifySuccess } from "./toast";
 import { getCitiesByCountryAction } from "@/app/api/cities/actions";
 import CharacteristicsClient from "./characteristicsClient";
@@ -342,6 +341,7 @@ export function AddBeachForm({
                 <FileInput
                   key={id}
                   id={`picture-${id}`}
+                  name={`picture-${id}`}
                   onFileChange={handleFileChange}
                 />
               ))}
