@@ -11,7 +11,7 @@ const BeachRequestsCard = ({ request }: { request: BeachDetailsData }) => {
   const id = request.id;
 
   const handleViewDetails = () => {
-    router.push(`/beaches/${id}`);
+    router.push(`/beach-requests/${id}`);
   };
 
   return (
