@@ -370,6 +370,21 @@ export async function confirmBeach(prevState: any, formData: FormData) {
       return updatedBeach;
     });
 
+    const filePromises = [];
+
+    for (let i = 0; i < 10; i++) {
+      const fileKey = `picture-${i}`;
+      const file = formData.get(fileKey) as File;
+
+      if (file && file instanceof File && file.size > 0) {
+        filePromises.push(uploadImages(beachId, file));
+      }
+    }
+
+    if (filePromises.length > 0) {
+      await Promise.all(filePromises);
+    }
+
     revalidatePath("/beaches");
     revalidatePath(`/beach/${id}`);
 

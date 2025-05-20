@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { ConfirmBeachRequestForm } from "@/components/ui/confirmBeachRequestForm";
 import { notFound } from "next/navigation";
 import { getBeachById } from "@/lib/serverFunctions";
+import { getSignedImageUrlServer } from "@/app/common/storage";
 
 export default async function ConfirmBeachRequestPage({
   params,
@@ -15,6 +16,12 @@ export default async function ConfirmBeachRequestPage({
   if (!beach) {
     notFound();
   }
+
+  const imageUrls = await Promise.all(
+    beach.images?.map(async (image) => {
+      return await getSignedImageUrlServer(image.path);
+    }) || []
+  );
 
   const regularCharacteristics = beach.beach_has_characteristics
     .filter((char) => !char.featured)
@@ -41,7 +48,7 @@ export default async function ConfirmBeachRequestPage({
     characteristics: regularCharacteristics,
     featured_items: featuredItems,
     userId: beach.user_id,
-    //imageUrls: imageUrls,
+    imageUrls: imageUrls,
   };
   const [beachTypes, beachTextures, beachDepths, countries, characteristics] =
     await Promise.all([

@@ -1,3 +1,4 @@
+import { createClient } from "@/utils/supabase/server";
 import { prisma } from "./prisma";
 
 function serializeData(data: any): any {
@@ -78,6 +79,7 @@ export async function getBeachById(id: number) {
             },
           },
         },
+        images: true,
       },
     });
     const imageUrls = [];
