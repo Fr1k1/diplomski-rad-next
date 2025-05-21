@@ -430,21 +430,10 @@ export async function getFilteredBeachesAction(
     let beaches = await prisma.beaches.findMany({
       where: whereClause,
       include: {
-        beach_types: true,
-        beach_textures: true,
-        cities: {
-          include: {
-            countries: true,
-          },
-        },
         images: {
           take: 1,
         },
-        beach_has_characteristics: {
-          include: {
-            characteristics: true,
-          },
-        },
+
         _count: {
           select: {
             reviews: true,
@@ -453,24 +442,11 @@ export async function getFilteredBeachesAction(
       },
     });
 
-    if (characteristicIds && characteristicIds.length > 0) {
-      beaches = beaches.filter((beach) => {
-        const beachCharIds = beach.beach_has_characteristics.map(
-          (char) => char.characteristic_id
-        );
-        return characteristicIds.every((id) => beachCharIds.includes(id));
-      });
-    }
-
     const transformedBeaches: FilteredBeaches[] = beaches.map((beach) => ({
       id: beach.id,
       name: beach.name,
       description: beach.description,
       address: beach.address,
-      beachType: beach.beach_types.name,
-      beachTexture: beach.beach_textures.name,
-      cityName: beach.cities.name,
-      countryName: beach.cities.countries.name,
       imagePath: beach.images[0]?.path || null,
       reviewCount: beach._count.reviews,
     }));
