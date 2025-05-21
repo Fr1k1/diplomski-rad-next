@@ -34,7 +34,6 @@ function serializeData(data: any): any {
   return data;
 }
 
-//ovo je server only funkcija, treba ici van
 export async function getBeachById(id: number) {
   try {
     const beach = await prisma.beaches.findUnique({

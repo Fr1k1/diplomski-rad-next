@@ -1,5 +1,6 @@
 "use server";
 
+import { FilteredBeaches } from "@/app/common/types";
 import { prisma } from "@/lib/prisma";
 import { createClient } from "@/utils/supabase/server";
 import { revalidatePath } from "next/cache";
@@ -392,5 +393,91 @@ export async function confirmBeach(prevState: any, formData: FormData) {
   } catch (error) {
     console.error("Error confirming beach:", error);
     return { success: false, error: "An unexpected error occurred" };
+  }
+}
+
+export async function getFilteredBeachesAction(
+  countryId: string,
+  filters: {
+    cityId?: string;
+    waterTypeId?: string;
+    beachTextureId?: string;
+    characteristicIds?: number[];
+  }
+): Promise<FilteredBeaches[]> {
+  const { cityId, waterTypeId, beachTextureId, characteristicIds } = filters;
+
+  try {
+    const whereClause: any = {
+      cities: {
+        country_id: parseInt(countryId),
+      },
+      approved: true,
+    };
+
+    if (cityId) {
+      whereClause.city_id = parseInt(cityId);
+    }
+
+    if (waterTypeId) {
+      whereClause.beach_type_id = parseInt(waterTypeId);
+    }
+
+    if (beachTextureId) {
+      whereClause.beach_texture_id = parseInt(beachTextureId);
+    }
+
+    let beaches = await prisma.beaches.findMany({
+      where: whereClause,
+      include: {
+        beach_types: true,
+        beach_textures: true,
+        cities: {
+          include: {
+            countries: true,
+          },
+        },
+        images: {
+          take: 1,
+        },
+        beach_has_characteristics: {
+          include: {
+            characteristics: true,
+          },
+        },
+        _count: {
+          select: {
+            reviews: true,
+          },
+        },
+      },
+    });
+
+    if (characteristicIds && characteristicIds.length > 0) {
+      beaches = beaches.filter((beach) => {
+        const beachCharIds = beach.beach_has_characteristics.map(
+          (char) => char.characteristic_id
+        );
+        return characteristicIds.every((id) => beachCharIds.includes(id));
+      });
+    }
+
+    const transformedBeaches: FilteredBeaches[] = beaches.map((beach) => ({
+      id: beach.id,
+      name: beach.name,
+      description: beach.description,
+      address: beach.address,
+      beachType: beach.beach_types.name,
+      beachTexture: beach.beach_textures.name,
+      cityName: beach.cities.name,
+      countryName: beach.cities.countries.name,
+      imagePath: beach.images[0]?.path || null,
+      reviewCount: beach._count.reviews,
+    }));
+
+    return transformedBeaches;
+  } catch (error) {
+    console.error("Error in getFilteredBeachesAction:", error);
+    throw new Error("Failed to fetch filtered beaches");
   }
 }

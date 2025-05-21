@@ -67,17 +67,6 @@ export async function GET(request: NextRequest) {
             },
           },
         },
-        // characteristics: {
-        //   select: {
-        //     characteristic: {
-        //       select: {
-        //         name: true,
-        //         icon_url: true,
-        //       },
-        //     },
-        //     featured: true,
-        //   },
-        // },
       },
     });
     const total = await prisma.beaches.count({
