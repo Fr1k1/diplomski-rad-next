@@ -3,14 +3,18 @@ import { prisma } from "@/lib/prisma";
 import { getBeachById } from "@/lib/serverFunctions";
 import { createClient } from "@/utils/supabase/server";
 
-export default async function BeachDetailsPage({ params }) {
+export default async function BeachDetailsPage({
+  params,
+}: {
+  params: { id: string };
+}) {
   const beach = await getBeachById(Number(params.id));
 
   const beachImages = await getBeachImages(Number(params.id));
   return <BeachDetailsClient beach={beach} beachImages={beachImages} />;
 }
 
-async function getBeachImages(beachId) {
+async function getBeachImages(beachId: number) {
   const beach = await prisma.beaches.findUnique({
     where: { id: Number(beachId) },
     include: {

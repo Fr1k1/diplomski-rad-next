@@ -9,8 +9,15 @@ import { calculateAverageRating } from "@/app/common/utils";
 import Image from "next/image";
 import CarouselClient from "./Carousel/carouselClient";
 import BeachFeaturesClient from "./beachFeaturesClient";
+import { CharacteristicModified } from "@/app/common/types";
 
-export default function BeachDetailsClient({ beach, beachImages }) {
+export default function BeachDetailsClient({
+  beach,
+  beachImages,
+}: {
+  beach: any;
+  beachImages: any;
+}) {
   const getReviewCount = () => beach?.reviews?.length ?? 0;
   const averageRating = beach?.reviews
     ? calculateAverageRating(beach.reviews)
@@ -68,6 +75,7 @@ export default function BeachDetailsClient({ beach, beachImages }) {
           <div className="text-lg font-bolder flex flex-col gap-4">
             {beach.beach_textures && (
               <div className="flex items-center gap-3">
+                <p>Type: {beach?.beach_textures?.name}</p>
                 <Image
                   src={beach.beach_textures.img_url}
                   alt=""
@@ -77,7 +85,7 @@ export default function BeachDetailsClient({ beach, beachImages }) {
                 />
               </div>
             )}
-            <p>Depth: {beach?.beach_depth?.description}</p>
+            <p>Depth: {beach?.beach_depths?.description}</p>
 
             <p>Best time to visit: {beach.best_time_to_visit}</p>
           </div>
@@ -85,14 +93,16 @@ export default function BeachDetailsClient({ beach, beachImages }) {
             beach.beach_has_characteristics.length > 0 && (
               <div className="flex gap-2">
                 {beach.beach_has_characteristics
-                  .filter((char) => char.featured)
-                  .map((characteristic, index) => (
-                    <BeachDetailsFeaturedCard
-                      key={index}
-                      name={characteristic.characteristics?.name}
-                      iconUrl={characteristic.characteristics?.icon_url}
-                    />
-                  ))}
+                  .filter((char: { featured: boolean }) => char.featured)
+                  .map(
+                    (characteristic: CharacteristicModified, index: number) => (
+                      <BeachDetailsFeaturedCard
+                        key={index}
+                        name={characteristic.characteristics?.name}
+                        iconUrl={characteristic.characteristics?.icon_url}
+                      />
+                    )
+                  )}
               </div>
             )}
         </div>

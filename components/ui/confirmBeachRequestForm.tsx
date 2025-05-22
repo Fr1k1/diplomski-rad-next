@@ -185,7 +185,7 @@ export function ConfirmBeachRequestForm({
   const [beachTextures] = useState(initialBeachTextures);
   const [beachDepths] = useState(initialBeachDepths);
   const [countries] = useState(initialCountries);
-  const [cities, setCities] = useState([]);
+  const [cities, setCities] = useState<any[]>([]);
   const [featuredCharacteristics] = useState(initialCharacteristics);
   const [fileInputs, setFileInputs] = useState([0]);
   const [images, setImages] = useState<File[]>([]);
@@ -200,13 +200,15 @@ export function ConfirmBeachRequestForm({
     }
   };
 
-  const handleCountryChange = async (countryId: string) => {
+  const handleCountryChange = async (countryId: string | number) => {
+    const stringifiedCountryId = countryId.toString();
+
     setIsCountryChanged(true);
 
     try {
-      const result = await getCitiesByCountryAction(countryId);
+      const result = await getCitiesByCountryAction(stringifiedCountryId);
       if (result.success) {
-        setCities(result?.data);
+        setCities(result?.data || []);
       } else {
         console.error("Error fetching cities:", result.error);
         setCities([]);

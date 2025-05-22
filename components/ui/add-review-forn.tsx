@@ -57,7 +57,7 @@ function SubmitButton() {
 
 interface AddReviewFormProps {
   beachId: string;
-  userId: string;
+  userId: string | undefined;
   beachData: any;
 }
 

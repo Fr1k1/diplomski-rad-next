@@ -3,6 +3,7 @@ import { ConfirmBeachRequestForm } from "@/components/ui/confirmBeachRequestForm
 import { notFound } from "next/navigation";
 import { getBeachById } from "@/lib/serverFunctions";
 import { getSignedImageUrlServer } from "@/app/common/storage";
+import { Image } from "@/app/common/types";
 
 export default async function ConfirmBeachRequestPage({
   params,
@@ -18,18 +19,20 @@ export default async function ConfirmBeachRequestPage({
   }
 
   const imageUrls = await Promise.all(
-    beach.images?.map(async (image) => {
+    beach.images?.map(async (image: Image) => {
       return await getSignedImageUrlServer(image.path);
     }) || []
   );
 
   const regularCharacteristics = beach.beach_has_characteristics
-    .filter((char) => !char.featured)
-    .map((char) => char.characteristic_id);
+    .filter((char: { featured: boolean }) => !char.featured)
+    .map((char: { characteristic_id: number }) => char.characteristic_id);
 
   const featuredItems = beach.beach_has_characteristics
-    .filter((char) => char.featured)
-    .map((char) => char.characteristic_id.toString());
+    .filter((char: { featured: boolean }) => char.featured)
+    .map((char: { characteristic_id: number }) =>
+      char.characteristic_id.toString()
+    );
 
   const initialBeachData = {
     id: beachId.toString(),

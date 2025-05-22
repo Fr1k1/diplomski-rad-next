@@ -1,19 +1,19 @@
 "use client";
 
-import { BeachData } from "@/app/common/types";
+import { BeachDetailsData } from "@/app/common/types";
 import Title from "@/components/ui/title";
 import { useState } from "react";
 import BeachRequestsCard from "./beachRequestsCard";
 
 interface BeachRequestsClientProps {
-  initialBeachRequests: BeachData[];
+  initialBeachRequests: BeachDetailsData[];
 }
 
 export default function BeachRequestsClient({
   initialBeachRequests,
 }: BeachRequestsClientProps) {
   const [beachRequests, setBeachRequests] =
-    useState<BeachData[]>(initialBeachRequests);
+    useState<BeachDetailsData[]>(initialBeachRequests);
   const [loading, setLoading] = useState<boolean>(false);
 
   return (

@@ -129,3 +129,7 @@ export interface FilteredBeaches {
   image?: string;
   name: string;
 }
+
+export interface CharacteristicModified {
+  characteristics: { name: string; icon_url: string };
+}
