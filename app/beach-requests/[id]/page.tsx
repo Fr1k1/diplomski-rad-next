@@ -69,7 +69,7 @@ export default async function ConfirmBeachRequestPage({
   });
 
   return (
-    <div className="container mx-auto py-8">
+    <div>
       <ConfirmBeachRequestForm
         initialBeachTypes={beachTypes}
         initialBeachTextures={beachTextures}

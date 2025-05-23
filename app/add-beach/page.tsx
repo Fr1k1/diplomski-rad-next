@@ -12,7 +12,7 @@ export default async function AddBeachPage() {
       prisma.characteristics.findMany(),
     ]);
   return (
-    <div className="container mx-auto py-8">
+    <div>
       <AddBeachForm
         initialBeachTypes={beachTypes}
         initialBeachTextures={beachTextures}

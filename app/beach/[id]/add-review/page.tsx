@@ -19,7 +19,7 @@ export default async function AddReviewPage({
   const userId = user?.id;
 
   return (
-    <div className="container mx-auto py-8">
+    <div>
       <AddReviewForm beachId={beachId} beachData={beachData} userId={userId} />
     </div>
   );
