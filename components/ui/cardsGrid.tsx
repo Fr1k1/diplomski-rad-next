@@ -28,7 +28,7 @@ const CardsGrid = ({
         )}
       </div>
 
-      <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 ">
+      <div className="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
         {cardData?.map((data, index) => (
           <CardItem key={index} data={data} />
         ))}

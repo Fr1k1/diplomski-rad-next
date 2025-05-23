@@ -25,7 +25,7 @@ const CardItemClient = ({
 }: CardItemClientProps) => {
   return (
     <div>
-      <Card>
+      <Card className="h-full flex flex-col">
         <CardHeader>
           <div className="flex flex-row items-center justify-between">
             <div>
@@ -53,14 +53,16 @@ const CardItemClient = ({
             </div>
           </div>
         </CardHeader>
-        <CardContent>
-          <Image
-            src={image}
-            alt={`Image of ${name}`}
-            className="w-full h-full"
-            width={500}
-            height={300}
-          />
+        <CardContent className="flex-1">
+          <div className="w-full h-72 overflow-hidden">
+            <Image
+              src={image}
+              alt={`Image of ${name}`}
+              className="w-full h-full object-cover"
+              width={500}
+              height={300}
+            />
+          </div>
         </CardContent>
       </Card>
     </div>

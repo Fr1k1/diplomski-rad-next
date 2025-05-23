@@ -45,7 +45,7 @@ export default async function Home({
       <Hero />
       <div className=" flex flex-col gap-6">
         <CardsGrid
-          hasMoreButton
+          hasMoreButton={false}
           title="Top picks this season"
           cardData={bestRatedBeaches}
         />
@@ -55,9 +55,13 @@ export default async function Home({
           countryIdFromPath={countryIdFromPath}
           cityIdFromUrl={cityIdFromUrl}
         />
-        <CardsGrid hasMoreButton title="Sea beaches" cardData={seaBeaches} />
         <CardsGrid
-          hasMoreButton
+          title="Sea beaches"
+          cardData={seaBeaches}
+          hasMoreButton={false}
+        />
+        <CardsGrid
+          hasMoreButton={false}
           title="River beaches"
           cardData={riverBeaches}
         />
