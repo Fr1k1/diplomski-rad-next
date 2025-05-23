@@ -1,9 +1,13 @@
-import { GeistSans } from "geist/font/sans";
 import "./globals.css";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
 import ClientLayoutPart from "@/components/ui/ClientLayoutPart";
 import { createClient } from "@/utils/supabase/server";
+
+// const nerkoOne = Nerko_One({
+//   subsets: ["latin"],
+//   weight: "400",
+// });
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -37,8 +41,8 @@ export default async function RootLayout({
     isAdmin = !!userData?.is_admin;
   }
   return (
-    <html lang="en" className={GeistSans.className}>
-      <body>
+    <html lang="en">
+      <body className="bg-bg">
         <main className="min-h-screen flex flex-col">
           <Header isLoggedIn={isLoggedIn || false} isAdmin={isAdmin || false} />
           <ClientLayoutPart>{children}</ClientLayoutPart>

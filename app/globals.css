@@ -1,9 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Nerko+One:wght@400&display=swap");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @layer base {
   :root {
     --radius: 0.5rem;
+  }
+
+  * {
+    font-family: "Montserrat", sans-serif;
   }
 }
 
@@ -13,10 +20,6 @@
     font-weight: 800;
     font-style: normal;
   }
-}
-
-* {
-  font-family: "Montserrat", sans-serif;
 }
 
 /*because of stars rating component*/
