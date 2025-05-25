@@ -137,7 +137,6 @@ export function AddReviewForm({
                       <Rating
                         size={40}
                         transition
-                        allowFraction
                         {...field}
                         onClick={(rate) => {
                           field.onChange(rate);

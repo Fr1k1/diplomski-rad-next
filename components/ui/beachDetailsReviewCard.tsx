@@ -10,12 +10,7 @@ const BeachDetailsReviewCard = ({ review }: { review: Review }) => {
           <div className="flex justify-between items-center">
             <h3 className="text-base font-semibold">{review?.title}</h3>
 
-            <Rating
-              size={25}
-              transition
-              allowFraction
-              initialValue={review?.rating}
-            />
+            <Rating size={25} transition initialValue={review?.rating} />
           </div>
           <div>
             <p className="text-sm mb-2">{review?.description}</p>

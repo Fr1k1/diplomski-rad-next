@@ -43,7 +43,6 @@ export default function BeachDetailsClient({
                   readonly
                   size={25}
                   transition
-                  allowFraction
                   initialValue={averageRating}
                 />
                 <p>{reviewCount} reviews</p>

@@ -32,12 +32,7 @@ const CardItemClient = ({
             <div>
               <CardTitle>{name}</CardTitle>
               <div className="flex items-center gap-2">
-                <Rating
-                  size={25}
-                  transition
-                  allowFraction
-                  initialValue={rating}
-                />
+                <Rating size={25} transition initialValue={rating} readonly />
                 {cityName && countryName && (
                   <h4>
                     {cityName}, {countryName}
