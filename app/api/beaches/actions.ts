@@ -472,7 +472,11 @@ export async function getFilteredBeachesAction(
         images: {
           take: 1,
         },
-
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
         _count: {
           select: {
             reviews: true,
@@ -481,14 +485,26 @@ export async function getFilteredBeachesAction(
       },
     });
 
-    const transformedBeaches: FilteredBeaches[] = beaches.map((beach) => ({
-      id: beach.id,
-      name: beach.name,
-      description: beach.description,
-      address: beach.address,
-      imagePath: beach.images[0]?.path || null,
-      reviewCount: beach._count.reviews,
-    }));
+    const transformedBeaches: FilteredBeaches[] = beaches.map((beach) => {
+      let avgRating = 0;
+      if (beach.reviews && beach.reviews.length > 0) {
+        const totalRating = beach.reviews.reduce(
+          (sum, review) => sum + review.rating,
+          0
+        );
+        avgRating = totalRating / beach.reviews.length;
+      }
+
+      return {
+        id: beach.id,
+        name: beach.name,
+        description: beach.description,
+        address: beach.address,
+        imagePath: beach.images[0]?.path || null,
+        reviewCount: beach._count.reviews,
+        avgRating: avgRating,
+      };
+    });
 
     return transformedBeaches;
   } catch (error) {
