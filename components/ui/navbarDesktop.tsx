@@ -1,9 +1,8 @@
 import { Button } from "./button";
-import Logo from "../../app/assets/logo.png";
+import Logo from "../../public/logo.png";
 import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
 
 const NavbarDesktop = ({
   isLoggedIn,

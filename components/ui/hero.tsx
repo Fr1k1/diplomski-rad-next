@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import HeroImage from "../../app/assets/hero_image.svg";
+import HeroImage from "../../public/hero_image.svg";
 import Image from "next/image";
 const Hero = () => {
   const [isDesktop, setDesktop] = useState<boolean | null>(null);

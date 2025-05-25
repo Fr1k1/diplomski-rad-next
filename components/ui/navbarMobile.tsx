@@ -4,7 +4,7 @@ import { List, X } from "@phosphor-icons/react";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Logo from "../../app/assets/logo.png";
+import Logo from "../../public/logo.png";
 import { Button } from "./button";
 import { createClient } from "@/utils/supabase/client";
 //has many interactivity so it's ok to be client

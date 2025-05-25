@@ -23,6 +23,7 @@ const CardItemClient = ({
   cityName,
   countryName,
 }: CardItemClientProps) => {
+  const imageUrl = image || "/no_image_placeholder.png";
   return (
     <div>
       <Card className="h-full flex flex-col">
@@ -56,7 +57,7 @@ const CardItemClient = ({
         <CardContent className="flex-1">
           <div className="w-full h-72 overflow-hidden">
             <Image
-              src={image}
+              src={imageUrl}
               alt={`Image of ${name}`}
               className="w-full h-full object-cover"
               width={500}

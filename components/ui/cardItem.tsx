@@ -39,7 +39,7 @@ async function CardItem({ data }: CardItemProps) {
   }
 
   if (!imageUrl) {
-    imageUrl = "/placeholder-beach.jpg";
+    imageUrl = "/no__image_placeholder.png";
   }
 
   const rating =
