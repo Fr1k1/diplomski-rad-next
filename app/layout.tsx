@@ -1,7 +1,7 @@
 import "./globals.css";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import ClientLayoutPart from "@/components/ui/ClientLayoutPart";
+import ClientLayoutPart from "@/components/ui/clientLayoutPart";
 import { createClient } from "@/utils/supabase/server";
 
 // const nerkoOne = Nerko_One({

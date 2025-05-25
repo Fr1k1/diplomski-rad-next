@@ -1,5 +1,5 @@
 import { getBeachGeoDataById } from "@/app/api/beaches/actions";
-import { AddReviewForm } from "@/components/ui/add-review-forn";
+import { AddReviewForm } from "@/components/ui/addReviewForm";
 import { createClient } from "@/utils/supabase/server";
 
 export default async function AddReviewPage({

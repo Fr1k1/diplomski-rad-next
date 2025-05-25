@@ -6,7 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { LoginForm } from "@/components/ui/login-form";
+import { LoginForm } from "@/components/ui/loginForm";
 
 export default function LoginPage() {
   return (
