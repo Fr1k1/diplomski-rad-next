@@ -68,6 +68,12 @@ export default async function ConfirmBeachRequestPage({
     },
   });
 
+  const serializedCities = cities.map((city) => ({
+    ...city,
+    latitude: city.latitude ? Number(city.latitude) : null,
+    longitude: city.longitude ? Number(city.longitude) : null,
+  }));
+
   return (
     <div>
       <ConfirmBeachRequestForm
@@ -76,7 +82,7 @@ export default async function ConfirmBeachRequestPage({
         initialBeachDepths={beachDepths}
         initialCountries={countries}
         initialCharacteristics={characteristics}
-        initialCities={cities}
+        initialCities={serializedCities}
         initialBeachData={initialBeachData}
       />
     </div>
