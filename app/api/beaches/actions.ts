@@ -116,46 +116,77 @@ export async function getBeachGeoDataById(id: string) {
   }
 }
 
-export async function addBeach(prevState: any, formData: FormData) {
-  try {
-    const name = formData.get("name") as string;
-    const address = formData.get("address") as string;
-    const beachTypeId = formData.get("beachTypeId") as string;
-    const beachDepthId = formData.get("beachDepthId") as string;
-    const beachTextureId = formData.get("beachTextureId") as string;
-    const cityId = formData.get("cityId") as string;
-    const working_hours = formData.get("working_hours") as string;
-    const description = formData.get("description") as string;
-    const best_time_to_visit = formData.get("best_time_to_visit") as string;
-    const local_wildlife = formData.get("local_wildlife") as string;
-    const restaurants_and_bars_nearby = formData.get(
-      "restaurants_and_bars_nearby"
-    ) as string;
-    const characteristics = formData.getAll("characteristics") as string[];
-    const featured_items = formData.getAll("featured_items") as string[];
-    const userId = formData.get("userId") as string;
+const addBeachFormSchema = z.object({
+  name: z.string().min(2).max(80),
+  address: z.string().min(2),
+  beachTypeId: z.string().min(1),
+  beachDepthId: z.string().min(1),
+  beachTextureId: z.string().min(1),
+  cityId: z.string().min(1),
+  working_hours: z.string().min(2).max(80),
+  description: z.string().min(2),
+  best_time_to_visit: z.string().min(2).max(100),
+  local_wildlife: z.string().min(2),
+  restaurants_and_bars_nearby: z.string().min(2),
+  characteristics: z.array(z.number()).optional(),
+  featured_items: z.array(z.string()).optional().default([]),
+  userId: z.string().min(1),
+});
 
+export async function addBeach(prevState: any, formData: FormData) {
+  const rawData = {
+    name: formData.get("name") as string,
+    address: formData.get("address") as string,
+    beachTypeId: formData.get("beachTypeId") as string,
+    beachDepthId: formData.get("beachDepthId") as string,
+    beachTextureId: formData.get("beachTextureId") as string,
+    cityId: formData.get("cityId") as string,
+    working_hours: formData.get("working_hours") as string,
+    description: formData.get("description") as string,
+    best_time_to_visit: formData.get("best_time_to_visit") as string,
+    local_wildlife: formData.get("local_wildlife") as string,
+    restaurants_and_bars_nearby: formData.get(
+      "restaurants_and_bars_nearby"
+    ) as string,
+    characteristics: formData.getAll("characteristics").map(Number),
+    featured_items: formData.getAll("featured_items") as string[],
+    userId: formData.get("userId") as string,
+  };
+
+  const validationResult = addBeachFormSchema.safeParse(rawData);
+  if (!validationResult.success) {
+    return {
+      success: false,
+      error: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
     const beach = await prisma.beaches.create({
       data: {
-        name,
-        address,
-        beach_type_id: Number(beachTypeId),
-        beach_depth_id: Number(beachDepthId),
-        beach_texture_id: Number(beachTextureId),
-        city_id: Number(cityId),
-        working_hours,
-        description,
-        best_time_to_visit,
-        local_wildlife,
-        restaurants_and_bars_nearby,
-        user_id: userId,
+        name: validationResult.data.name,
+        address: validationResult.data.address,
+        beach_type_id: Number(validationResult.data.beachTypeId),
+        beach_depth_id: Number(validationResult.data.beachDepthId),
+        beach_texture_id: Number(validationResult.data.beachTextureId),
+        city_id: Number(validationResult.data.cityId),
+        working_hours: validationResult.data.working_hours,
+        description: validationResult.data.description,
+        best_time_to_visit: validationResult.data.best_time_to_visit,
+        local_wildlife: validationResult.data.local_wildlife,
+        restaurants_and_bars_nearby:
+          validationResult.data.restaurants_and_bars_nearby,
+        user_id: validationResult.data.userId,
         approved: false,
       },
     });
 
-    if (characteristics.length > 0) {
+    if (
+      validationResult.data.characteristics &&
+      validationResult.data.characteristics.length > 0
+    ) {
       await Promise.all(
-        characteristics.map((charId) =>
+        validationResult.data.characteristics.map((charId) =>
           prisma.beach_has_characteristics.create({
             data: {
               featured: false,
@@ -163,7 +194,7 @@ export async function addBeach(prevState: any, formData: FormData) {
                 connect: { id: beach.id },
               },
               characteristics: {
-                connect: { id: Number(charId) },
+                connect: { id: charId },
               },
             },
           })
@@ -171,9 +202,12 @@ export async function addBeach(prevState: any, formData: FormData) {
       );
     }
 
-    if (featured_items.length > 0) {
+    if (
+      validationResult.data.featured_items &&
+      validationResult.data.featured_items.length > 0
+    ) {
       await Promise.all(
-        featured_items.map((itemId) =>
+        validationResult.data.featured_items.map((itemId) =>
           prisma.beach_has_characteristics.create({
             data: {
               featured: true,
@@ -191,7 +225,7 @@ export async function addBeach(prevState: any, formData: FormData) {
 
     const filePromises = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       const fileKey = `picture-${i}`;
       const file = formData.get(fileKey) as File;
 
@@ -203,10 +237,15 @@ export async function addBeach(prevState: any, formData: FormData) {
     if (filePromises.length > 0) {
       await Promise.all(filePromises);
     }
+
     return { success: true, data: beach };
   } catch (error) {
     console.error("Error adding beach:", error);
-    return { success: false, error: "Failed to add beach" };
+    let errorMessage = "Failed to add beach";
+    if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    return { success: false, error: errorMessage };
   }
 }
 
@@ -373,7 +412,7 @@ export async function confirmBeach(prevState: any, formData: FormData) {
 
     const filePromises = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
       const fileKey = `picture-${i}`;
       const file = formData.get(fileKey) as File;
 
