@@ -4,9 +4,9 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import { City } from "@/app/types/City";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { City } from "@/app/common/types";
 
 const Map = ({ cities }: { cities: City[] }) => {
   const router = useRouter();

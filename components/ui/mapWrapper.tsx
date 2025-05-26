@@ -1,7 +1,7 @@
 "use client";
 
+import { City } from "@/app/common/types";
 import dynamic from "next/dynamic";
-import { City } from "@/app/types/City";
 
 const MapWithNoSSR = dynamic(() => import("./map"), {
   ssr: false,

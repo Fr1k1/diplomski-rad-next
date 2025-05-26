@@ -1,4 +1,4 @@
-import { City } from "@/app/types/City";
+import { City } from "@/app/common/types";
 import { prisma } from "@/lib/prisma";
 
 export async function getCitiesByCountry(countryId: string): Promise<City[]> {
@@ -22,8 +22,8 @@ export async function getCitiesByCountry(countryId: string): Promise<City[]> {
       name: city.name,
       country_id: city.country_id,
       countryId: city.country_id,
-      latitude: city.latitude,
-      longitude: city.longitude,
+      latitude: city.latitude ? Number(city.latitude) : null,
+      longitude: city.longitude ? Number(city.longitude) : null,
     }));
 
     return typedCities;

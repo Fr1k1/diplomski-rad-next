@@ -2,9 +2,9 @@ import CardsGrid from "@/components/ui/cardsGrid";
 import Hero from "@/components/ui/hero";
 import MapSearcher from "@/components/ui/mapSearcher";
 import { prisma } from "@/lib/prisma";
-import { City } from "./types/City";
 import { getBeachesByType, getCitiesByCountry } from "@/lib/api";
 import { calculateAverageRating } from "./common/utils";
+import { City } from "./common/types";
 
 export default async function Home({
   params,

@@ -133,3 +133,19 @@ export interface FilteredBeaches {
 export interface CharacteristicModified {
   characteristics: { name: string; icon_url: string };
 }
+
+export interface Characteristic {
+  id: number | string;
+  name: string;
+  icon_url: string;
+  beach_has_characteristics?: { featured: boolean };
+}
+
+export interface City {
+  id: string | number;
+  name: string;
+  latitude: number | null;
+  longitude: number | null;
+  countryId: number;
+  country_id?: number;
+}

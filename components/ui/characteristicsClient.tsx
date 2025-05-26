@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Switch } from "./switch";
 import { Label } from "./label";
-import { Characteristic } from "@/app/types/Characteristic";
+import { Characteristic } from "@/app/common/types";
 
 interface CharacteristicsClientProps {
   characteristics: Characteristic[] | null;

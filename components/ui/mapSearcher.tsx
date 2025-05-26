@@ -10,7 +10,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Form } from "@/components/ui/form";
-import { City } from "@/app/types/City";
+import { City } from "@/app/common/types";
 
 const formSchema = z.object({
   beach_country: z.string().min(2, {
