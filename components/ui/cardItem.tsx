@@ -10,9 +10,9 @@ type CardItemProps = {
     image?: string;
     avgRating?: number;
     reviews?: any[];
-    city?: {
+    cities?: {
       name: string;
-      country?: {
+      countries?: {
         name: string;
       };
     };
@@ -55,8 +55,8 @@ async function CardItem({ data }: CardItemProps) {
       name={data.name}
       image={imageUrl}
       rating={rating}
-      cityName={data.city?.name}
-      countryName={data.city?.country?.name}
+      cityName={data?.cities?.name}
+      countryName={data?.cities?.countries?.name}
     />
   );
 }
