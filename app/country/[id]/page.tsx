@@ -5,6 +5,8 @@ import FilterBeachesForm from "@/components/ui/filterBeachesForm";
 import Pagination from "@/components/ui/Pagination/pagination";
 import { Button } from "@/components/ui/button";
 import { getFilteredBeachesAction } from "@/app/api/beaches/actions";
+import MapSearcher from "@/components/ui/mapSearcher";
+import PaginationWrapper from "@/components/ui/paginationWrapper";
 
 interface CountryPageProps {
   params: {
@@ -15,6 +17,7 @@ interface CountryPageProps {
     waterType?: string;
     beachTexture?: string;
     characteristics?: string;
+    page?: string;
   };
 }
 
@@ -29,6 +32,7 @@ export default async function CountryPage({
   const characteristicIds = searchParams.characteristics
     ? searchParams.characteristics.split(",").map((id) => Number(id))
     : undefined;
+  const page = parseInt(searchParams.page || "1");
 
   const country = await prisma.countries.findUnique({
     where: { id: parseInt(countryId) },
@@ -53,12 +57,20 @@ export default async function CountryPage({
     characteristicIds,
   };
 
-  const beaches = await getFilteredBeachesAction(countryId, filters);
+  const beaches = await getFilteredBeachesAction(countryId, filters, page, 9);
 
-  const [beachTypes, beachTextures, beachCharacteristics] = await Promise.all([
+  const [
+    beachTypes,
+    beachTextures,
+    beachCharacteristics,
+    beachCities,
+    beachCountries,
+  ] = await Promise.all([
     prisma.beach_types.findMany(),
     prisma.beach_textures.findMany(),
     prisma.characteristics.findMany(),
+    prisma.cities.findMany(),
+    prisma.countries.findMany(),
   ]);
   const hasActiveFilters =
     !!waterTypeId || !!beachTextureId || !!characteristicIds;
@@ -103,13 +115,21 @@ export default async function CountryPage({
         </div>
       </div>
 
+      {/* <MapSearcher
+        initialCountries={beachCountries}
+        initialCities={beachCities}
+        countryIdFromPath={"1"}
+        cityIdFromUrl={"1"}
+        hasMap={false}
+      /> */}
+
       <CardsGrid
-        hasMoreButton
+        hasMoreButton={false}
         title={hasActiveFilters ? "Filtered beaches" : "Beaches"}
-        cardData={beaches}
+        cardData={beaches.data}
       />
 
-      {/* <Pagination totalPages={2} /> */}
+      <PaginationWrapper totalPages={beaches.totalPages} />
     </div>
   );
 }

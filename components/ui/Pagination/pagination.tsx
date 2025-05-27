@@ -7,7 +7,7 @@ const Pagination = ({
   setPage,
   totalPages,
 }: {
-  setPage: React.Dispatch<React.SetStateAction<number>>;
+  setPage: (page: number) => void;
   totalPages: number;
 }) => {
   const handlePageClick = (event: { selected: number }) => {

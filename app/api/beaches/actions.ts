@@ -442,9 +442,17 @@ export async function getFilteredBeachesAction(
     waterTypeId?: string;
     beachTextureId?: string;
     characteristicIds?: number[];
-  }
-): Promise<FilteredBeaches[]> {
+  },
+  page = 1,
+  pageSize = 9
+): Promise<{
+  data: FilteredBeaches[];
+  totalPages: number;
+  currentPage: number;
+  totalCount: number;
+}> {
   const { cityId, waterTypeId, beachTextureId, characteristicIds } = filters;
+  const offset = (page - 1) * pageSize;
 
   try {
     const whereClause: any = {
@@ -466,8 +474,26 @@ export async function getFilteredBeachesAction(
       whereClause.beach_texture_id = parseInt(beachTextureId);
     }
 
+    if (characteristicIds && characteristicIds.length > 0) {
+      whereClause.beach_characteristics = {
+        some: {
+          characteristic_id: {
+            in: characteristicIds,
+          },
+        },
+      };
+    }
+
+    const totalCount = await prisma.beaches.count({
+      where: whereClause,
+    });
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
     let beaches = await prisma.beaches.findMany({
       where: whereClause,
+      skip: offset,
+      take: pageSize,
       include: {
         images: {
           take: 1,
@@ -506,9 +532,19 @@ export async function getFilteredBeachesAction(
       };
     });
 
-    return transformedBeaches;
+    return {
+      data: transformedBeaches,
+      totalPages: totalPages,
+      currentPage: page,
+      totalCount: totalCount,
+    };
   } catch (error) {
     console.error("Error in getFilteredBeachesAction:", error);
-    throw new Error("Failed to fetch filtered beaches");
+    return {
+      data: [],
+      totalPages: 0,
+      currentPage: page,
+      totalCount: 0,
+    };
   }
 }
