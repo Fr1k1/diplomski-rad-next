@@ -18,13 +18,6 @@ export default function RegisterPage() {
         </CardHeader>
         <CardContent>
           <RegisterForm />
-          <CardDescription>
-            or{" "}
-            <Link href="/login">
-              <span className="underline text-secondary"> sign in </span>
-            </Link>{" "}
-            if you already have an account
-          </CardDescription>
         </CardContent>
       </Card>
     </div>

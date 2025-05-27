@@ -10,6 +10,8 @@ import { useEffect } from "react";
 import { notifyFailure } from "./toast";
 import { registerUser } from "@/app/auth/actions";
 import FormFieldCustom from "./formFieldCustom";
+import { CardDescription } from "./card";
+import Link from "next/link";
 
 const formSchema = z.object({
   first_name: z
@@ -85,58 +87,67 @@ export function RegisterForm() {
   }, [state]);
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={(e) => {
-          const isValid = form.trigger();
-          if (!isValid) {
-            e.preventDefault();
-          }
-        }}
-        className="mb-4"
-        id="form"
-        action={formAction}
-      >
-        <div className="grid w-full items-center gap-4">
-          <div className="flex flex-col space-y-1.5">
-            <FormFieldCustom
-              name="first_name"
-              placeholder="First Name"
-              form={form}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <FormFieldCustom
-              name="last_name"
-              placeholder="Last Name"
-              form={form}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <FormFieldCustom
-              name="username"
-              placeholder="Username"
-              form={form}
-            />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <FormFieldCustom name="email" placeholder="Email" form={form} />
-          </div>
-          <div className="flex flex-col space-y-1.5">
-            <FormFieldCustom
-              name="password"
-              placeholder="Password"
-              form={form}
-            />
-          </div>
-          {state?.error && (
-            <div className="text-sm font-medium text-destructive">
-              {state.error}
+    <>
+      <Form {...form}>
+        <form
+          onSubmit={(e) => {
+            const isValid = form.trigger();
+            if (!isValid) {
+              e.preventDefault();
+            }
+          }}
+          className="mb-4"
+          id="form"
+          action={formAction}
+        >
+          <div className="grid w-full items-center gap-4 mb-6">
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom
+                name="first_name"
+                placeholder="First Name"
+                form={form}
+              />
             </div>
-          )}
-        </div>
-        <SubmitButton />
-      </form>
-    </Form>
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom
+                name="last_name"
+                placeholder="Last Name"
+                form={form}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom
+                name="username"
+                placeholder="Username"
+                form={form}
+              />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom name="email" placeholder="Email" form={form} />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom
+                name="password"
+                placeholder="Password"
+                form={form}
+              />
+            </div>
+            {state?.error && (
+              <div className="text-sm font-medium text-destructive">
+                {state.error}
+              </div>
+            )}
+          </div>
+          <CardDescription className="mb-6">
+            or{" "}
+            <Link href="/login">
+              <span className="underline text-secondary"> sign in </span>
+            </Link>{" "}
+            if you already have an account
+          </CardDescription>
+          <SubmitButton />
+        </form>
+      </Form>
+    </>
   );
 }
