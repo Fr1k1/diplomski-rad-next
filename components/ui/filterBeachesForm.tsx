@@ -174,7 +174,7 @@ export default function FilterBeachesForm({
                             {beachTextures.map((beachTexture) => (
                               <SelectItem
                                 key={beachTexture.id}
-                                value={beachTexture.id}
+                                value={beachTexture.id.toString()}
                               >
                                 {beachTexture.name}
                               </SelectItem>
