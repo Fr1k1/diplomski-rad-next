@@ -124,6 +124,9 @@ export function ConfirmBeachRequestForm({
   initialBeachData,
 }: ConfirmBeachRequestFormProps) {
   useEffect(() => {
+    if (initialBeachData?.beach_country) {
+      handleCountryChange(initialBeachData.beach_country);
+    }
     console.log("Initial beach data mi je", initialBeachData);
   }, [initialBeachData]);
   const [featuredItemFields] = useState([
