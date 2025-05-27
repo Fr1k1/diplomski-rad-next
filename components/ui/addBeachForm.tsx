@@ -100,12 +100,7 @@ const formSchema = z.object({
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (
-    <Button
-      className="w-full"
-      variant={"darker"}
-      type="submit"
-      disabled={pending}
-    >
+    <Button className="px-24 mb-6" type="submit" disabled={pending}>
       {pending ? "Adding beach..." : "Create request"}
     </Button>
   );
