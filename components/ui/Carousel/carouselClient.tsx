@@ -1,6 +1,7 @@
 "use client";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel as ReactCarousel } from "react-responsive-carousel";
+import "./carousel.scss";
 
 export default function CarouselClient({
   imageUrls,
@@ -29,8 +30,6 @@ export default function CarouselClient({
               src={url}
               className="w-full h-full object-cover"
               alt="Beach image"
-              width={800}
-              height={550}
             />
           </div>
         ))}
