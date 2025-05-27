@@ -9,6 +9,8 @@ import { z } from "zod";
 import { notifyFailure } from "./toast";
 import { loginUser } from "@/app/auth/actions";
 import FormFieldCustom from "./formFieldCustom";
+import { CardDescription } from "./card";
+import Link from "next/link";
 
 const formSchema = z.object({
   email: z.string().email({
@@ -52,26 +54,45 @@ export function LoginForm() {
   }, [state]);
 
   return (
-    <Form {...form}>
-      <form
-        action={formAction}
-        className="space-y-4"
-        onSubmit={(e) => {
-          const isValid = form.trigger();
-          if (!isValid) {
-            e.preventDefault();
-          }
-        }}
-      >
-        <FormFieldCustom name="email" placeholder="Email" form={form} />
-        <FormFieldCustom name="password" placeholder="Password" form={form} />
-        {state?.error && (
-          <div className="text-sm font-medium text-destructive">
-            {state.error}
+    <>
+      <Form {...form}>
+        <form
+          action={formAction}
+          className="space-y-4"
+          onSubmit={(e) => {
+            const isValid = form.trigger();
+            if (!isValid) {
+              e.preventDefault();
+            }
+          }}
+        >
+          <div className="grid w-full items-center gap-4">
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom name="email" placeholder="Email" form={form} />
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <FormFieldCustom
+                name="password"
+                placeholder="Password"
+                form={form}
+              />
+            </div>
+            {state?.error && (
+              <div className="text-sm font-medium text-destructive">
+                {state.error}
+              </div>
+            )}
+            <CardDescription className="mb-6">
+              Or{" "}
+              <Link href="/register" className="underline text-secondary">
+                sign up
+              </Link>{" "}
+              to create an account
+            </CardDescription>
+            <SubmitButton />
           </div>
-        )}
-        <SubmitButton />
-      </form>
-    </Form>
+        </form>
+      </Form>
+    </>
   );
 }
