@@ -174,7 +174,9 @@ export function AddBeachForm({
   const [images, setImages] = useState<File[]>([]);
 
   const [isCountryChanged, setIsCountryChanged] = useState(false);
-  const [featuredItems, setFeaturedItems] = useState<string[]>([]);
+  const [featuredItems, setFeaturedItems] = useState<string[]>(
+    Array(5).fill("")
+  );
 
   useEffect(() => {
     form.setValue("featured_items", featuredItems);
@@ -385,9 +387,13 @@ export function AddBeachForm({
                     options={featuredCharacteristics}
                     onValueChange={(value) => {
                       const newItems = [...featuredItems];
-                      newItems[index] = value.toString();
-                      setFeaturedItems(newItems.filter(Boolean));
-                      form.setValue("featured_items", newItems.filter(Boolean));
+                      if (value) {
+                        newItems[index] = value.toString();
+                      } else {
+                        newItems[index] = "";
+                      }
+                      setFeaturedItems(newItems);
+                      form.setValue("featured_items", newItems);
                     }}
                   />
                 ))}
@@ -429,7 +435,7 @@ export function AddBeachForm({
             name="cityId"
             value={form.getValues().cityId || ""}
           />
-          {featuredItems.map((item, index) => (
+          {featuredItems.filter(Boolean).map((item, index) => (
             <input
               key={index}
               type="hidden"
