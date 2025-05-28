@@ -436,7 +436,6 @@ export async function confirmBeach(prevState: any, formData: FormData) {
 }
 
 export async function getFilteredBeachesAction(
-  countryId: string,
   filters: {
     cityId?: string;
     waterTypeId?: string;
@@ -444,7 +443,8 @@ export async function getFilteredBeachesAction(
     characteristicIds?: number[];
   },
   page = 1,
-  pageSize = 9
+  pageSize = 9,
+  countryId?: string
 ): Promise<{
   data: FilteredBeaches[];
   totalPages: number;
@@ -456,11 +456,14 @@ export async function getFilteredBeachesAction(
 
   try {
     const whereClause: any = {
-      cities: {
-        country_id: parseInt(countryId),
-      },
       approved: true,
     };
+
+    if (countryId) {
+      whereClause.cities = {
+        country_id: parseInt(countryId),
+      };
+    }
 
     if (cityId) {
       whereClause.city_id = parseInt(cityId);
@@ -475,7 +478,7 @@ export async function getFilteredBeachesAction(
     }
 
     if (characteristicIds && characteristicIds.length > 0) {
-      whereClause.beach_characteristics = {
+      whereClause.beach_has_characteristics = {
         some: {
           characteristic_id: {
             in: characteristicIds,
