@@ -3,6 +3,7 @@ import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
 import ClientLayoutPart from "@/components/ui/clientLayoutPart";
 import { createClient } from "@/utils/supabase/server";
+import ScrollToTop from "@/components/ui/scrollToTop";
 
 // const nerkoOne = Nerko_One({
 //   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default async function RootLayout({
     <html lang="en">
       <body className="bg-bg">
         <main className="min-h-screen flex flex-col">
+          <ScrollToTop />
           <Header isLoggedIn={isLoggedIn || false} isAdmin={isAdmin || false} />
           <ClientLayoutPart>{children}</ClientLayoutPart>
           <Footer />
