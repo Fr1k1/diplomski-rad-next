@@ -6,15 +6,8 @@ import { getBeachesByType, getCitiesByCountry } from "@/lib/api";
 import { calculateAverageRating } from "./common/utils";
 import { City } from "./common/types";
 
-export default async function Home({
-  params,
-  searchParams,
-}: {
-  params: { countryId?: string };
-  searchParams: { city?: string };
-}) {
+export default async function Home() {
   const riverBeaches = await getBeachesByType(1);
-
   const seaBeaches = await getBeachesByType(2);
 
   const countries = await prisma.countries.findMany({});
@@ -23,12 +16,17 @@ export default async function Home({
     id: String(country.id),
   }));
 
-  const countryIdFromPath = params.countryId || "";
-  const cityIdFromUrl = searchParams.city || "";
-
   let cities: City[] = [];
-  if (countryIdFromPath) {
-    cities = await getCitiesByCountry(countryIdFromPath);
+  let firstCountryId = "";
+  let firstCityId = "";
+
+  if (convertedCountries.length > 0) {
+    firstCountryId = convertedCountries[0].id;
+    cities = await getCitiesByCountry(firstCountryId);
+
+    if (cities.length > 0) {
+      firstCityId = cities[0].id.toString();
+    }
   }
 
   const allBeaches = [...riverBeaches, ...seaBeaches];
@@ -40,21 +38,23 @@ export default async function Home({
     (a, b) => b.calculatedRating - a.calculatedRating
   );
   const bestRatedBeaches = sortedBeaches.slice(0, 4);
+
   return (
     <div>
       <Hero />
-      <div className=" flex flex-col gap-6">
+      <div className="flex flex-col gap-6">
         <CardsGrid
           hasMoreButton={false}
           title="Top picks this season"
           cardData={bestRatedBeaches}
         />
-        <MapSearcher
-          initialCountries={convertedCountries}
-          initialCities={cities}
-          countryIdFromPath={countryIdFromPath}
-          cityIdFromUrl={cityIdFromUrl}
-        />
+        {convertedCountries.length > 0 && (
+          <MapSearcher
+            initialCountries={convertedCountries}
+            initialCities={cities}
+            countryIdFromPath={firstCountryId}
+          />
+        )}
         <CardsGrid
           title="Sea beaches"
           cardData={seaBeaches}
