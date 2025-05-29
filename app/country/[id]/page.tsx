@@ -109,9 +109,6 @@ export default async function CountryPage({
     id: String(country.id),
   }));
 
-  const hasActiveFilters =
-    !!waterTypeId || !!beachTextureId || !!characteristicIds;
-
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between">

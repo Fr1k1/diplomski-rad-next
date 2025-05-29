@@ -30,5 +30,11 @@ export default function PaginationWrapper({
     router.push(url);
   };
 
-  return <Pagination setPage={handlePageChange} totalPages={totalPages} />;
+  return (
+    <>
+      {totalPages > 1 && (
+        <Pagination setPage={handlePageChange} totalPages={totalPages} />
+      )}
+    </>
+  );
 }
