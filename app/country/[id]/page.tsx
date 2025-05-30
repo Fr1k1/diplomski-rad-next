@@ -36,11 +36,17 @@ export default async function CountryPage({
       id: String(country.id),
     }));
 
+    const convertedCities = beachCities.map((city) => ({
+      ...city,
+      latitude: parseFloat(city.latitude.toString()),
+      longitude: parseFloat(city.longitude.toString()),
+    }));
+
     return (
       <div className="flex flex-col gap-6">
         <MapSearcher
           initialCountries={convertedCountries}
-          initialCities={beachCities}
+          initialCities={convertedCities}
           countryIdFromPath=""
           cityIdFromUrl=""
           hasMap={true}
@@ -110,6 +116,12 @@ export default async function CountryPage({
     id: String(country.id),
   }));
 
+  const convertedCities = beachCities.map((city) => ({
+    ...city,
+    latitude: parseFloat(city.latitude.toString()),
+    longitude: parseFloat(city.longitude.toString()),
+  }));
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex justify-between">
@@ -135,7 +147,7 @@ export default async function CountryPage({
 
       <MapSearcher
         initialCountries={convertedCountries}
-        initialCities={beachCities}
+        initialCities={convertedCities}
         countryIdFromPath={countryId}
         cityIdFromUrl={cityId || ""}
         hasMap={false}
