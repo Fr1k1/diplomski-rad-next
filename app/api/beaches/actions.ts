@@ -322,9 +322,6 @@ export async function confirmBeach(prevState: any, formData: FormData) {
       .getAll("featured_items")
       .filter(Boolean) as string[];
 
-    console.log("U actionu karakteristike su", characteristics);
-    console.log("U actionu, featured items su", featured_items);
-
     const formDataWithArrays = {
       ...rawFormData,
       characteristics,
@@ -333,8 +330,6 @@ export async function confirmBeach(prevState: any, formData: FormData) {
     };
 
     const validatedData = confirmBeachFormSchema.safeParse(formDataWithArrays);
-
-    console.log("Validated data je", validatedData);
 
     if (!validatedData.success) {
       return {
@@ -358,8 +353,6 @@ export async function confirmBeach(prevState: any, formData: FormData) {
         featured: true,
       })),
     ];
-
-    console.log("Sve karakteristike su", allCharacteristics);
 
     const result = await prisma.$transaction(async (tx) => {
       const updatedBeach = await tx.beaches.update({

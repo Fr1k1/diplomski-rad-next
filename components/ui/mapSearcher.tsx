@@ -64,7 +64,6 @@ export default function MapSearcher({
 
       if (Array.isArray(citiesRes) && citiesRes.length > 0) {
         setCities(citiesRes);
-        console.log("Ima gradova i postavljam na", citiesRes);
       } else {
         setCities([]);
       }

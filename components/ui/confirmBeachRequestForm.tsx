@@ -124,7 +124,6 @@ export function ConfirmBeachRequestForm({
     if (initialBeachData?.beach_country) {
       handleCountryChange(initialBeachData.beach_country);
     }
-    console.log("Initial beach data mi je", initialBeachData);
   }, [initialBeachData]);
   const [featuredItemFields] = useState([
     { name: "featured_item_1", label: "Featured Item" },
@@ -179,7 +178,6 @@ export function ConfirmBeachRequestForm({
   useEffect(() => {
     if (initialBeachData?.id) {
       setBeachId(initialBeachData.id);
-      console.log("Setting beach ID to:", initialBeachData.id);
     }
   }, [initialBeachData]);
 

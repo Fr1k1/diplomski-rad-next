@@ -5,7 +5,6 @@ import { BeachDetailsData } from "@/app/common/types";
 import { useRouter } from "next/navigation";
 
 const BeachRequestsCard = ({ request }: { request: BeachDetailsData }) => {
-  console.log("Request in card:", request);
   const router = useRouter();
 
   const id = request.id;
