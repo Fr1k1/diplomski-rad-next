@@ -29,8 +29,8 @@ svg.star-svg {
 
 /*loader wrapper*/
 svg.dna-wrapper circle:nth-child(odd) {
-  fill: #075985;
+  fill: #075985 !important;
 }
 svg.dna-wrapper circle:nth-child(even) {
-  fill: #0891b2;
+  fill: #0891b2 !important;
 }
