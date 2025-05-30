@@ -1,6 +1,6 @@
 "use client";
-import { useFormState, useFormStatus } from "react-dom";
-import { useEffect } from "react";
+import { useFormState } from "react-dom";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,23 +21,22 @@ const formSchema = z.object({
   }),
 });
 
-//useFormStatus mora se pozivati unutar funkcije i zato je gumb ovak
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
   return (
     <Button
       className="w-full"
       variant={"darker"}
       type="submit"
-      disabled={pending}
+      disabled={isLoading}
     >
-      {pending ? "Logging in..." : "Login"}
+      {isLoading ? "Logging in..." : "Login"}
     </Button>
   );
 }
 
 export function LoginForm() {
   const [state, formAction] = useFormState(loginUser, null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -51,20 +50,24 @@ export function LoginForm() {
     if (state?.error) {
       notifyFailure("Something went wrong");
     }
+    if (state) {
+      setIsLoading(false);
+    }
   }, [state]);
 
   return (
     <>
       <Form {...form}>
         <form
-          action={formAction}
           className="space-y-4"
-          onSubmit={(e) => {
-            const isValid = form.trigger();
-            if (!isValid) {
-              e.preventDefault();
-            }
-          }}
+          onSubmit={form.handleSubmit(async (data) => {
+            setIsLoading(true);
+            const formData = new FormData();
+            Object.entries(data).forEach(([key, value]) => {
+              formData.append(key, value);
+            });
+            formAction(formData);
+          })}
         >
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
@@ -89,7 +92,7 @@ export function LoginForm() {
               </Link>{" "}
               to create an account
             </CardDescription>
-            <SubmitButton />
+            <SubmitButton isLoading={isLoading} />
           </div>
         </form>
       </Form>

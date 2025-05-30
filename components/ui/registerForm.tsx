@@ -1,12 +1,12 @@
 "use client";
 
 import { Form } from "@/components/ui/form";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { z } from "zod";
 import { Button } from "./button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { notifyFailure } from "./toast";
 import { registerUser } from "@/app/auth/actions";
 import FormFieldCustom from "./formFieldCustom";
@@ -51,22 +51,22 @@ const formSchema = z.object({
   }),
 });
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
   return (
     <Button
       className="w-full"
       variant={"darker"}
       type="submit"
-      disabled={pending}
+      disabled={isLoading}
     >
-      {pending ? "Registring" : "Register"}
+      {isLoading ? "Registering..." : "Register"}
     </Button>
   );
 }
 
 export function RegisterForm() {
   const [state, formAction] = useFormState(registerUser, null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,10 +79,12 @@ export function RegisterForm() {
     },
   });
 
-  //trazi da se vrati error
   useEffect(() => {
     if (state?.error) {
       notifyFailure("Something went wrong");
+    }
+    if (state) {
+      setIsLoading(false);
     }
   }, [state]);
 
@@ -90,15 +92,16 @@ export function RegisterForm() {
     <>
       <Form {...form}>
         <form
-          onSubmit={(e) => {
-            const isValid = form.trigger();
-            if (!isValid) {
-              e.preventDefault();
-            }
-          }}
+          onSubmit={form.handleSubmit(async (data) => {
+            setIsLoading(true);
+            const formData = new FormData();
+            Object.entries(data).forEach(([key, value]) => {
+              formData.append(key, value);
+            });
+            formAction(formData);
+          })}
           className="mb-4"
           id="form"
-          action={formAction}
         >
           <div className="grid w-full items-center gap-4 mb-6">
             <div className="flex flex-col space-y-1.5">
@@ -145,7 +148,7 @@ export function RegisterForm() {
             </Link>{" "}
             if you already have an account
           </CardDescription>
-          <SubmitButton />
+          <SubmitButton isLoading={isLoading} />
         </form>
       </Form>
     </>

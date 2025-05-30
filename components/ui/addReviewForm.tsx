@@ -1,6 +1,6 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
 import { Button } from "./button";
 import { z } from "zod";
 import { addReview } from "@/app/api/beaches/actions";
@@ -29,7 +29,6 @@ const formSchema = z.object({
   description: z.string().min(2, {
     message: "Description must be at least 2 characters.",
   }),
-
   rating: z.number().min(1, {
     message: "Rating is required.",
   }),
@@ -41,11 +40,10 @@ const formSchema = z.object({
   }),
 });
 
-function SubmitButton() {
-  const { pending } = useFormStatus();
+function SubmitButton({ isLoading }: { isLoading: boolean }) {
   return (
-    <Button className="px-24 mb-6" type="submit" disabled={pending}>
-      {pending ? "Adding review..." : "Add review"}
+    <Button className="px-24 mb-6" type="submit" disabled={isLoading}>
+      {isLoading ? "Adding review..." : "Add review"}
     </Button>
   );
 }
@@ -62,16 +60,17 @@ export function AddReviewForm({
   userId,
 }: AddReviewFormProps) {
   const [state, formAction] = useFormState(addReview, null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (state?.success) {
-      notifyFailure("Uspjesno ste dodali review");
-    } else if (state?.error) {
-      notifyFailure("Doslo je do pogreske" + state?.error);
+    if (state?.error) {
+      notifyFailure("Something went wrong");
+    }
+    if (state) {
+      setIsLoading(false);
     }
   }, [state]);
 
-  const [rating, setRating] = useState(0);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -103,14 +102,15 @@ export function AddReviewForm({
       <div>
         <Form {...form}>
           <form
-            action={formAction}
-            onSubmit={(e) => {
-              const isValid = form.trigger();
-              if (!isValid) {
-                e.preventDefault();
-              }
-            }}
             className="space-y-8"
+            onSubmit={form.handleSubmit(async (data) => {
+              setIsLoading(true);
+              const formData = new FormData();
+              Object.entries(data).forEach(([key, value]) => {
+                formData.append(key, String(value));
+              });
+              formAction(formData);
+            })}
           >
             <FormFieldCustom name="title" placeholder="Title" form={form} />
 
@@ -135,13 +135,10 @@ export function AddReviewForm({
                         {...field}
                         onClick={(rate) => {
                           field.onChange(rate);
-                          setRating(rate);
                         }}
                         initialValue={field.value}
                       />
                     </FormControl>
-                    {/*radi server actions da se procesuira value, a form control ocekuje samo jedan child*/}
-                    <input type="hidden" name="rating" value={rating} />
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -149,11 +146,8 @@ export function AddReviewForm({
             />
 
             <div className="flex justify-end ">
-              <SubmitButton />
+              <SubmitButton isLoading={isLoading} />
             </div>
-            {/*radi server actions da se procesuira value*/}
-            <input type="hidden" name="userId" value={userId} />
-            <input type="hidden" name="beachId" value={beachId} />
           </form>
         </Form>
       </div>
