@@ -15,7 +15,7 @@ const BeachDetailsReviewCard = ({ review }: { review: Review }) => {
           <div>
             <p className="text-sm mb-2">{review?.description}</p>
             <p className="text-sm">
-              {review?.user?.first_name} {review?.user?.last_name}
+              {review?.users?.first_name} {review?.users?.last_name}
             </p>
           </div>
         </CardHeader>

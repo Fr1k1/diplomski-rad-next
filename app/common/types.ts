@@ -79,7 +79,7 @@ export interface Review {
   description: string | null;
   rating: number;
   userId?: string;
-  user?: { first_name: string; last_name: string };
+  users?: { first_name: string; last_name: string };
   beach_name?: string;
   beachId?: string;
 }
