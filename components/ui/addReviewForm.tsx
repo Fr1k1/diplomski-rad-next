@@ -7,7 +7,7 @@ import { addReview } from "@/app/api/beaches/actions";
 import Title from "./title";
 import { Info, MapPin } from "@phosphor-icons/react";
 import { useEffect, useState } from "react";
-import { notifyFailure } from "./toast";
+import { notifyFailure, notifySuccess } from "./toast";
 import Subtitle from "./subtitle";
 import FormFieldCustom from "./formFieldCustom";
 import {
@@ -21,6 +21,8 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Rating } from "react-simple-star-rating";
+//for clients, for server use next/router
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   title: z.string().min(2, {
@@ -61,10 +63,15 @@ export function AddReviewForm({
 }: AddReviewFormProps) {
   const [state, formAction] = useFormState(addReview, null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (state?.error) {
       notifyFailure("Something went wrong");
+    }
+    if (state?.success === true) {
+      notifySuccess("Review added succesfully");
+      router.push(`/beach/${beachId}`);
     }
     if (state) {
       setIsLoading(false);

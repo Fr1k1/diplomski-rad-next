@@ -33,6 +33,8 @@ import { useFormState, useFormStatus } from "react-dom";
 import CharacteristicsClient from "./characteristicsClient";
 import { getCitiesByCountryAction } from "@/app/api/cities/actions";
 import { confirmBeach } from "@/app/api/beaches/actions";
+import { notifyFailure, notifySuccess } from "./toast";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   id: z.string(),
@@ -172,6 +174,8 @@ export function ConfirmBeachRequestForm({
 
   const [beachId, setBeachId] = useState<string>("");
 
+  const router = useRouter();
+
   useEffect(() => {
     if (initialBeachData?.id) {
       setBeachId(initialBeachData.id);
@@ -266,6 +270,16 @@ export function ConfirmBeachRequestForm({
           featured_items: [],
         },
   });
+
+  useEffect(() => {
+    if (state?.error) {
+      notifyFailure("Something went wrong");
+    }
+    if (state?.success === true) {
+      notifySuccess("Beach confirmed succesfully");
+      router.push(`/`);
+    }
+  }, [state, form]);
 
   useEffect(() => {
     if (initialBeachData) {

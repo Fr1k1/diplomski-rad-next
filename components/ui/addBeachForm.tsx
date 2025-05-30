@@ -35,6 +35,7 @@ import { notifyFailure, notifySuccess } from "./toast";
 import { getCitiesByCountryAction } from "@/app/api/cities/actions";
 import CharacteristicsClient from "./characteristicsClient";
 import { getUserId } from "@/lib/clientFunctions";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   name: z
@@ -124,6 +125,7 @@ export function AddBeachForm({
 }: AddBeachFormProps) {
   const [state, formAction] = useFormState(addBeach, null);
   const [userId, setUserId] = useState("");
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -153,11 +155,12 @@ export function AddBeachForm({
   }, []);
 
   useEffect(() => {
-    if (state?.success) {
-      notifySuccess("Uspjeh");
-      form.reset();
-    } else if (state?.error) {
-      notifyFailure("Neuspjeh");
+    if (state?.error) {
+      notifyFailure("Something went wrong");
+    }
+    if (state?.success === true) {
+      notifySuccess("Beach added succesfully");
+      router.push(`/`);
     }
   }, [state, form]);
 

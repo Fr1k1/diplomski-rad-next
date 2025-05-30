@@ -4,6 +4,7 @@ import Footer from "@/components/ui/footer";
 import ClientLayoutPart from "@/components/ui/clientLayoutPart";
 import { createClient } from "@/utils/supabase/server";
 import ScrollToTop from "@/components/ui/scrollToTop";
+import { ToastContainer } from "react-toastify";
 
 // const nerkoOne = Nerko_One({
 //   subsets: ["latin"],
@@ -46,6 +47,7 @@ export default async function RootLayout({
       <body className="bg-bg">
         <main className="min-h-screen flex flex-col">
           <ScrollToTop />
+          <ToastContainer />
           <Header isLoggedIn={isLoggedIn || false} isAdmin={isAdmin || false} />
           <ClientLayoutPart>{children}</ClientLayoutPart>
           <Footer />
