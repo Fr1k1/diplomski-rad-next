@@ -40,6 +40,7 @@ export default async function CountryPage({
       ...city,
       latitude: parseFloat(city.latitude.toString()),
       longitude: parseFloat(city.longitude.toString()),
+      countryId: city.country_id,
     }));
 
     return (
@@ -120,6 +121,7 @@ export default async function CountryPage({
     ...city,
     latitude: parseFloat(city.latitude.toString()),
     longitude: parseFloat(city.longitude.toString()),
+    countryId: city.country_id,
   }));
 
   return (
