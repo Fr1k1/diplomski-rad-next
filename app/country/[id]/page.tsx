@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { getFilteredBeachesAction } from "@/app/api/beaches/actions";
 import MapSearcher from "@/components/ui/mapSearcher";
 import PaginationWrapper from "@/components/ui/paginationWrapper";
+import ActiveFilters from "@/components/ui/activeFilters";
 
 interface CountryPageProps {
   params: {
@@ -127,26 +128,10 @@ export default async function CountryPage({
         />
       </div>
 
-      <div className="grid grid-cols-3 gap-4 lg:flex ">
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Sea</p>
-        </div>
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Sand</p>
-        </div>
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Free parking</p>
-        </div>
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Restaurants</p>
-        </div>
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Free entry</p>
-        </div>
-        <div className="bg-secondary rounded-xl text-white px-3 py-1 text-sm">
-          <p>Something other</p>
-        </div>
-      </div>
+      <ActiveFilters
+        filters={filters}
+        beachRelatedData={{ beachTypes, beachTextures, beachCharacteristics }}
+      />
 
       <MapSearcher
         initialCountries={convertedCountries}
