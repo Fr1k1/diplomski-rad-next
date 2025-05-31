@@ -1,6 +1,5 @@
 "use client";
 
-import { useFormState } from "react-dom";
 import { Button } from "./button";
 import { z } from "zod";
 import { addReview } from "@/app/api/beaches/actions";
@@ -61,7 +60,7 @@ export function AddReviewForm({
   beachData,
   userId,
 }: AddReviewFormProps) {
-  const [state, formAction] = useFormState(addReview, null);
+  const [state, setState] = useState<ActionResult>(null);
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
@@ -88,6 +87,13 @@ export function AddReviewForm({
       userId: userId,
     },
   });
+
+  type ActionResult = {
+    success: boolean;
+    error?: any;
+    data?: any;
+    message?: string;
+  } | null;
 
   return (
     <div className="flex flex-col gap-4">
@@ -116,7 +122,9 @@ export function AddReviewForm({
               Object.entries(data).forEach(([key, value]) => {
                 formData.append(key, String(value));
               });
-              formAction(formData);
+
+              const result = await addReview(null, formData);
+              setState(result);
             })}
           >
             <FormFieldCustom name="title" placeholder="Title" form={form} />

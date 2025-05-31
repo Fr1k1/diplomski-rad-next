@@ -1,17 +1,17 @@
 "use client";
 
 import { Form } from "@/components/ui/form";
-import { useFormState } from "react-dom";
 import { z } from "zod";
 import { Button } from "./button";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
-import { notifyFailure } from "./toast";
+import { notifyFailure, notifySuccess } from "./toast";
 import { registerUser } from "@/app/auth/actions";
 import FormFieldCustom from "./formFieldCustom";
 import { CardDescription } from "./card";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   first_name: z
@@ -64,9 +64,15 @@ function SubmitButton({ isLoading }: { isLoading: boolean }) {
   );
 }
 
+type ActionResult = {
+  success: boolean;
+  message: string;
+  error?: boolean;
+} | null;
+
 export function RegisterForm() {
-  const [state, formAction] = useFormState(registerUser, null);
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -79,12 +85,17 @@ export function RegisterForm() {
     },
   });
 
+  const [state, setState] = useState<ActionResult>(null);
+
   useEffect(() => {
     if (state?.error) {
       notifyFailure("Something went wrong");
-    }
-    if (state) {
       setIsLoading(false);
+    }
+    if (state?.success === true) {
+      notifySuccess("Successful registration");
+      setIsLoading(false);
+      router.push(`/login`);
     }
   }, [state]);
 
@@ -98,7 +109,8 @@ export function RegisterForm() {
             Object.entries(data).forEach(([key, value]) => {
               formData.append(key, value);
             });
-            formAction(formData);
+            const result = await registerUser(null, formData);
+            setState(result);
           })}
           className="mb-4"
           id="form"
