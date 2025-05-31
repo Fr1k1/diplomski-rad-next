@@ -273,6 +273,7 @@ export function ConfirmBeachRequestForm({
     }
     if (state?.success === true) {
       notifySuccess("Beach request confirmed succesfully");
+      router.refresh();
       router.push(`/`);
     }
   }, [state, form]);
