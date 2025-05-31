@@ -41,6 +41,9 @@ export async function getBeachesByType(typeId: number, limit: number = 3) {
         approved: true,
       },
       take: limit,
+      orderBy: {
+        id: "asc",
+      },
       include: {
         cities: {
           include: {
