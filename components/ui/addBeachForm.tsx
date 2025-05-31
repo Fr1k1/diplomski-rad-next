@@ -159,7 +159,7 @@ export function AddBeachForm({
       notifyFailure("Something went wrong");
     }
     if (state?.success === true) {
-      notifySuccess("Beach added succesfully");
+      notifySuccess("Beach request successfully sent!");
       router.push(`/`);
     }
   }, [state, form]);

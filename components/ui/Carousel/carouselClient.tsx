@@ -9,7 +9,15 @@ export default function CarouselClient({
   imageUrls: Array<string>;
 }) {
   if (!imageUrls || imageUrls.length === 0) {
-    return <div>No images available</div>;
+    return (
+      <div className="h-[550px]">
+        <img
+          src="/no__image_placeholder.png"
+          alt="No image available"
+          className="w-full h-full object-cover"
+        />
+      </div>
+    );
   }
 
   return (
@@ -25,7 +33,7 @@ export default function CarouselClient({
       >
         {imageUrls.map((url, index) => (
           <div key={index} className="h-[550px]">
-            {/*komponenta ne radi s Next Image*/}
+            {/*component does not work with Next Image*/}
             <img
               src={url}
               className="w-full h-full object-cover"

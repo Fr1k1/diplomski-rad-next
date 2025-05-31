@@ -70,7 +70,7 @@ export function AddReviewForm({
       notifyFailure("Something went wrong");
     }
     if (state?.success === true) {
-      notifySuccess("Review added succesfully");
+      notifySuccess("Beach review successfully added!");
       router.push(`/beach/${beachId}`);
     }
     if (state) {
