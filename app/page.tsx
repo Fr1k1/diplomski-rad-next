@@ -7,8 +7,10 @@ import { calculateAverageRating } from "./common/utils";
 import { City } from "./common/types";
 
 export default async function Home() {
-  const riverBeaches = await getBeachesByType(1);
-  const seaBeaches = await getBeachesByType(2);
+  const SEA_BEACH_TYPE = 1;
+  const RIVER_BEACH_TYPE = 2;
+  const riverBeaches = await getBeachesByType(RIVER_BEACH_TYPE);
+  const seaBeaches = await getBeachesByType(SEA_BEACH_TYPE);
 
   const countries = await prisma.countries.findMany({});
   const convertedCountries = countries.map((country) => ({
