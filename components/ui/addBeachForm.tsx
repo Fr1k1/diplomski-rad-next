@@ -176,6 +176,7 @@ export function AddBeachForm({
   const [featuredItems, setFeaturedItems] = useState<string[]>(
     Array(5).fill("")
   );
+  const [selectedFeaturedIds, setSelectedFeaturedIds] = useState<string[]>([]);
 
   useEffect(() => {
     form.setValue("featured_items", featuredItems);
@@ -386,12 +387,16 @@ export function AddBeachForm({
                     options={featuredCharacteristics}
                     onValueChange={(value) => {
                       const newItems = [...featuredItems];
+                      const newSelectedIds = [...selectedFeaturedIds];
                       if (value) {
                         newItems[index] = value.toString();
+                        newSelectedIds[index] = value.toString();
                       } else {
                         newItems[index] = "";
+                        newSelectedIds[index] = "";
                       }
                       setFeaturedItems(newItems);
+                      setSelectedFeaturedIds(newSelectedIds.filter(Boolean));
                       form.setValue("featured_items", newItems);
                     }}
                   />
@@ -405,6 +410,7 @@ export function AddBeachForm({
             <CharacteristicsClient
               characteristics={initialCharacteristics}
               form={form}
+              disabledCharacteristics={selectedFeaturedIds}
             />
           </div>
           <BeachTips form={form} />

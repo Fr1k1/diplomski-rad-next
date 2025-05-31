@@ -9,11 +9,13 @@ import { Characteristic } from "@/app/common/types";
 interface CharacteristicsClientProps {
   characteristics: Characteristic[] | null;
   form?: UseFormReturn<any>;
+  disabledCharacteristics?: string[];
 }
 
 const CharacteristicsClient: React.FC<CharacteristicsClientProps> = ({
   characteristics,
   form,
+  disabledCharacteristics = [],
 }) => {
   const [selectedCharacteristics, setSelectedCharacteristics] = useState<
     string[]
@@ -56,6 +58,9 @@ const CharacteristicsClient: React.FC<CharacteristicsClientProps> = ({
         const isSelected = selectedCharacteristics.includes(
           String(characteristic.id)
         );
+        const isDisabled = disabledCharacteristics.includes(
+          String(characteristic.id)
+        );
 
         return (
           <div key={characteristic.id} className="flex items-center space-x-2">
@@ -65,6 +70,7 @@ const CharacteristicsClient: React.FC<CharacteristicsClientProps> = ({
               onCheckedChange={(checked) =>
                 handleCharacteristicChange(String(characteristic.id), checked)
               }
+              disabled={isDisabled}
             />
             <Label htmlFor={`characteristic-${characteristic.id}`}>
               {characteristic.name}
