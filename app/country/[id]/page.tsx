@@ -99,7 +99,14 @@ export default async function CountryPage({
     characteristicIds,
   };
 
-  const beaches = await getFilteredBeachesAction(filters, page, 9, countryId);
+  const PAGE_SIZE = 9;
+
+  const beaches = await getFilteredBeachesAction(
+    filters,
+    page,
+    PAGE_SIZE,
+    countryId
+  );
 
   const [beachTypes, beachTextures, beachCharacteristics] = await Promise.all([
     prisma.beach_types.findMany(),
