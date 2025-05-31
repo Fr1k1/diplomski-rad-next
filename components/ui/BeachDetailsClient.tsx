@@ -108,12 +108,9 @@ export default function BeachDetailsClient({
       </div>
 
       <div className="flex flex-col-reverse lg:grid lg:grid-cols-2">
-        {beach.beach_has_characteristics &&
-          beach.beach_has_characteristics.length > 0 && (
-            <BeachFeaturesClient
-              characteristics={beach.beach_has_characteristics}
-            />
-          )}
+        <BeachFeaturesClient
+          characteristics={beach.beach_has_characteristics || []}
+        />
         <BeachDetailsAccordion
           bestTimeToVisit={beach?.best_time_to_visit}
           localWildlife={beach?.local_wildlife}
