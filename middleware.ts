@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
   return await updateSession(request);
 }
 export const config = {
-  //tu su one di ocu da se izvrsava
+  //on this routes it will be matched
   matcher: [
     /*
      * Match all request paths except:

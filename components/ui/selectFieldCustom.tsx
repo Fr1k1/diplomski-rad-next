@@ -14,7 +14,6 @@ import {
   SelectItem,
   SelectLabel,
 } from "@/components/ui/select";
-import Image from "next/image";
 
 import { FieldValues, Path, useForm } from "react-hook-form";
 
@@ -56,7 +55,7 @@ const SelectFieldCustom = <T extends FieldValues>({
               value={field.value}
               onValueChange={(value) => {
                 field.onChange(value);
-                onValueChange?.(value); // optional callback
+                onValueChange?.(value);
               }}
               disabled={disabled}
             >
@@ -83,7 +82,8 @@ const SelectFieldCustom = <T extends FieldValues>({
                           )}
                           {option.icon_url && option.name && (
                             <div className="bg-primary-500 rounded-lg p-0.5">
-                              <Image
+                              {/*because of known NextJS bug that has been fixed in Canary release, img is used instead of Image from Next*/}
+                              <img
                                 src={option.icon_url}
                                 alt={option?.name}
                                 className="w-6 h-6"

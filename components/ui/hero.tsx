@@ -4,7 +4,6 @@ import HeroImage from "../../public/hero_image.svg";
 import Image from "next/image";
 const Hero = () => {
   const [isDesktop, setDesktop] = useState<boolean | null>(null);
-  //tu napisi u diplomskom kak se mora drukcije postavljati vrijednosti
 
   useEffect(() => {
     setDesktop(window.innerWidth >= 1024);

@@ -98,7 +98,7 @@ const formSchema = z.object({
   images: z.array(z.string()).default([]),
 });
 
-//useFormStatus mora se pozivati unutar funkcije i zato je gumb ovak
+//useFormStatus has to be called inside functions
 function SubmitButton() {
   const { pending } = useFormStatus();
   return (

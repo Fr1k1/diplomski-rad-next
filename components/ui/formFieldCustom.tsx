@@ -11,7 +11,7 @@ import { Textarea } from "./textarea";
 
 interface FormFieldCustomProps<T extends FieldValues> {
   form: ReturnType<typeof useForm<T>>;
-  name: Path<T>; //for type safety
+  name: Path<T>;
   label?: string;
   placeholder?: string;
   textarea?: boolean;

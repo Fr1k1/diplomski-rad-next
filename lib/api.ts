@@ -7,7 +7,7 @@ export async function getCitiesByCountry(countryId: string): Promise<City[]> {
       where: {
         country_id: parseInt(countryId, 10),
       },
-      //sve se mora tu selectati da bude dostupno dolje
+      //everything has to be selected to be available later
       select: {
         id: true,
         name: true,
