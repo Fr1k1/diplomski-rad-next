@@ -1,10 +1,10 @@
 import "./globals.css";
 import Header from "@/components/ui/header";
 import Footer from "@/components/ui/footer";
-import ClientLayoutPart from "@/components/ui/clientLayoutPart";
 import { createClient } from "@/utils/supabase/server";
 import ScrollToTop from "@/components/ui/scrollToTop";
 import { ToastContainer } from "react-toastify";
+import ClientLayoutPart from "@/components/ui/ClientLayoutPart";
 
 // const nerkoOne = Nerko_One({
 //   subsets: ["latin"],
