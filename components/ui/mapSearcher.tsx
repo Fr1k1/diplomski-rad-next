@@ -120,6 +120,11 @@ export default function MapSearcher({
     }
   };
 
+  useEffect(() => {
+    setSelectedCityId(cityIdFromUrl || "");
+    form.setValue("beach_city", cityIdFromUrl || "");
+  }, [cityIdFromUrl, form]);
+
   return (
     <div className="px-4 lg:px-0">
       {hasMap && <Title className="mb-6">Find the perfect beach</Title>}

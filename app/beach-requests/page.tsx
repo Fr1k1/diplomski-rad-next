@@ -1,11 +1,8 @@
 import BeachRequestsClient from "@/components/ui/beachRequestsClient";
+import { getBeachRequests } from "../api/beaches/actions";
 
 export default async function BeachRequestsPage() {
-  //spremi ovo u neki env
-  const response = await fetch(`http://localhost:3000/api/beaches?approved=0`, {
-    cache: "no-store",
-  });
-  const data = await response.json();
+  const data = await getBeachRequests();
 
-  return <BeachRequestsClient initialBeachRequests={data.beaches || []} />;
+  return <BeachRequestsClient initialBeachRequests={data.beaches as any} />;
 }

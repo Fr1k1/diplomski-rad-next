@@ -62,18 +62,6 @@ export default async function ConfirmBeachRequestPage({
       prisma.characteristics.findMany(),
     ]);
 
-  const cities = await prisma.cities.findMany({
-    where: {
-      country_id: beach.cities.country_id,
-    },
-  });
-
-  const serializedCities = cities.map((city) => ({
-    ...city,
-    latitude: city.latitude ? Number(city.latitude) : null,
-    longitude: city.longitude ? Number(city.longitude) : null,
-  }));
-
   return (
     <div>
       <ConfirmBeachRequestForm
@@ -82,7 +70,6 @@ export default async function ConfirmBeachRequestPage({
         initialBeachDepths={beachDepths}
         initialCountries={countries}
         initialCharacteristics={characteristics}
-        initialCities={serializedCities}
         initialBeachData={initialBeachData}
       />
     </div>

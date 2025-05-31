@@ -33,7 +33,7 @@ export async function getCitiesByCountry(countryId: string): Promise<City[]> {
   }
 }
 
-export async function getBeachesByType(typeId: number, limit: number = 4) {
+export async function getBeachesByType(typeId: number, limit: number = 3) {
   try {
     const beaches = await prisma.beaches.findMany({
       where: {

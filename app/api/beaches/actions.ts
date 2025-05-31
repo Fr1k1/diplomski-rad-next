@@ -133,6 +133,28 @@ const addBeachFormSchema = z.object({
   userId: z.string().min(1),
 });
 
+async function processBeachImages(
+  beachId: number,
+  formData: FormData
+): Promise<void> {
+  const filePromises = [];
+
+  const MAX_NUMBER_OF_IMAGES = 5;
+
+  for (let i = 0; i < MAX_NUMBER_OF_IMAGES; i++) {
+    const fileKey = `picture-${i}`;
+    const file = formData.get(fileKey) as File;
+
+    if (file && file instanceof File && file.size > 0) {
+      filePromises.push(uploadImages(beachId, file));
+    }
+  }
+
+  if (filePromises.length > 0) {
+    await Promise.all(filePromises);
+  }
+}
+
 export async function addBeach(prevState: any, formData: FormData) {
   const rawData = {
     name: formData.get("name") as string,
@@ -222,20 +244,10 @@ export async function addBeach(prevState: any, formData: FormData) {
         )
       );
     }
-
-    const filePromises = [];
-
-    for (let i = 0; i < 5; i++) {
-      const fileKey = `picture-${i}`;
-      const file = formData.get(fileKey) as File;
-
-      if (file && file instanceof File && file.size > 0) {
-        filePromises.push(uploadImages(beach.id, file));
-      }
-    }
-
-    if (filePromises.length > 0) {
-      await Promise.all(filePromises);
+    try {
+      await processBeachImages(beach.id, formData);
+    } catch (imageError) {
+      console.error("Error processing images:", imageError);
     }
 
     return { success: true, data: beach };
@@ -403,23 +415,11 @@ export async function confirmBeach(prevState: any, formData: FormData) {
       return updatedBeach;
     });
 
-    const filePromises = [];
-
-    for (let i = 0; i < 5; i++) {
-      const fileKey = `picture-${i}`;
-      const file = formData.get(fileKey) as File;
-
-      if (file && file instanceof File && file.size > 0) {
-        filePromises.push(uploadImages(beachId, file));
-      }
+    try {
+      await processBeachImages(beachId, formData);
+    } catch (imageError) {
+      console.error("Error processing images:", imageError);
     }
-
-    if (filePromises.length > 0) {
-      await Promise.all(filePromises);
-    }
-
-    revalidatePath("/beaches");
-    revalidatePath(`/beach/${id}`);
 
     return { success: true };
   } catch (error) {
@@ -541,6 +541,101 @@ export async function getFilteredBeachesAction(
       totalPages: 0,
       currentPage: page,
       totalCount: 0,
+    };
+  }
+}
+
+export async function getBeachRequests(page = 1, pageSize = 12) {
+  try {
+    const whereClause = { approved: false };
+    const offset = (page - 1) * pageSize;
+
+    const totalCount = await prisma.beaches.count({
+      where: whereClause,
+    });
+
+    const totalPages = Math.ceil(totalCount / pageSize);
+
+    const beaches = await prisma.beaches.findMany({
+      where: whereClause,
+      skip: offset,
+      take: pageSize,
+      include: {
+        beach_textures: {
+          select: {
+            name: true,
+            img_url: true,
+          },
+        },
+        beach_types: {
+          select: {
+            name: true,
+          },
+        },
+        beach_depths: {
+          select: {
+            description: true,
+          },
+        },
+        cities: {
+          select: {
+            name: true,
+            latitude: true,
+            longitude: true,
+            countries: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        users: {
+          select: {
+            first_name: true,
+            last_name: true,
+          },
+        },
+        reviews: {
+          select: {
+            title: true,
+            description: true,
+            rating: true,
+            users: {
+              select: {
+                first_name: true,
+                last_name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    const serializedBeaches = beaches.map((beach) => ({
+      ...beach,
+      cities: beach.cities
+        ? {
+            ...beach.cities,
+            latitude: parseFloat(beach.cities.latitude.toString()),
+            longitude: parseFloat(beach.cities.longitude.toString()),
+          }
+        : beach.cities,
+    }));
+
+    return {
+      beaches: serializedBeaches,
+      pagination: {
+        page,
+        pageSize,
+        total: totalCount,
+        totalPages,
+      },
+    };
+  } catch (error) {
+    console.error("Error fetching beach requests:", error);
+    return {
+      beaches: [],
+      pagination: { page, pageSize, total: 0, totalPages: 0 },
     };
   }
 }

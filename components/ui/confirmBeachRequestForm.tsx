@@ -107,7 +107,6 @@ interface ConfirmBeachRequestFormProps {
   initialBeachDepths: any[];
   initialCountries: any[];
   initialCharacteristics: any[];
-  initialCities?: any[];
   initialBeachData?: any;
 }
 
@@ -117,7 +116,6 @@ export function ConfirmBeachRequestForm({
   initialBeachDepths,
   initialCountries,
   initialCharacteristics,
-  initialCities = [],
   initialBeachData,
 }: ConfirmBeachRequestFormProps) {
   useEffect(() => {

@@ -1,4 +1,3 @@
-import { createClient } from "@/utils/supabase/server";
 import { prisma } from "./prisma";
 
 function serializeData(data: any): any {
@@ -81,31 +80,8 @@ export async function getBeachById(id: number) {
         images: true,
       },
     });
-    const imageUrls = [];
-    if (beach?.images && beach.images.length > 0) {
-      const supabase = createClient();
 
-      for (const image of beach.images) {
-        try {
-          const { data, error } = await supabase.storage
-            .from("beach_images")
-            .createSignedUrl(image.path, 7200);
-
-          if (!error && data) {
-            imageUrls.push(data.signedUrl);
-          }
-        } catch (e) {
-          console.error("Error creating signed URL:", e);
-        }
-      }
-    }
-
-    const beachWithImages = {
-      ...serializeData(beach),
-      imageUrls,
-    };
-
-    return beachWithImages;
+    return serializeData(beach);
   } catch (error) {
     console.error("Failed to fetch beach:", error);
     return null;

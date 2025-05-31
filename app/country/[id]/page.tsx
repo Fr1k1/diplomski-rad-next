@@ -25,24 +25,25 @@ export default async function CountryPage({
   searchParams,
 }: CountryPageProps) {
   const countryId = params.id;
-  const renderMapSearcher = async () => {
-    const [beachCountries, beachCities] = await Promise.all([
-      prisma.countries.findMany(),
-      prisma.cities.findMany(),
-    ]);
 
-    const convertedCountries = beachCountries.map((country) => ({
-      ...country,
-      id: String(country.id),
-    }));
+  const [beachCountries, beachCities] = await Promise.all([
+    prisma.countries.findMany(),
+    prisma.cities.findMany(),
+  ]);
 
-    const convertedCities = beachCities.map((city) => ({
-      ...city,
-      latitude: parseFloat(city.latitude.toString()),
-      longitude: parseFloat(city.longitude.toString()),
-      countryId: city.country_id,
-    }));
+  const convertedCountries = beachCountries.map((country) => ({
+    ...country,
+    id: String(country.id),
+  }));
 
+  const convertedCities = beachCities.map((city) => ({
+    ...city,
+    latitude: parseFloat(city.latitude.toString()),
+    longitude: parseFloat(city.longitude.toString()),
+    countryId: city.country_id,
+  }));
+
+  if (!countryId || isNaN(parseInt(countryId))) {
     return (
       <div className="flex flex-col gap-6">
         <MapSearcher
@@ -54,23 +55,25 @@ export default async function CountryPage({
         />
       </div>
     );
-  };
-
-  if (!countryId) {
-    return await renderMapSearcher();
   }
 
   const parsedCountryId = parseInt(countryId);
-  if (isNaN(parsedCountryId)) {
-    return await renderMapSearcher();
-  }
-
   const country = await prisma.countries.findUnique({
     where: { id: parsedCountryId },
   });
 
   if (!country) {
-    return await renderMapSearcher();
+    return (
+      <div className="flex flex-col gap-6">
+        <MapSearcher
+          initialCountries={convertedCountries}
+          initialCities={convertedCities}
+          countryIdFromPath=""
+          cityIdFromUrl=""
+          hasMap={true}
+        />
+      </div>
+    );
   }
 
   const cityId = searchParams.city;
@@ -98,31 +101,11 @@ export default async function CountryPage({
 
   const beaches = await getFilteredBeachesAction(filters, page, 9, countryId);
 
-  const [
-    beachTypes,
-    beachTextures,
-    beachCharacteristics,
-    beachCities,
-    beachCountries,
-  ] = await Promise.all([
+  const [beachTypes, beachTextures, beachCharacteristics] = await Promise.all([
     prisma.beach_types.findMany(),
     prisma.beach_textures.findMany(),
     prisma.characteristics.findMany(),
-    prisma.cities.findMany(),
-    prisma.countries.findMany(),
   ]);
-
-  const convertedCountries = beachCountries.map((country) => ({
-    ...country,
-    id: String(country.id),
-  }));
-
-  const convertedCities = beachCities.map((city) => ({
-    ...city,
-    latitude: parseFloat(city.latitude.toString()),
-    longitude: parseFloat(city.longitude.toString()),
-    countryId: city.country_id,
-  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -132,7 +115,6 @@ export default async function CountryPage({
         </Button>
 
         <FilterBeachesForm
-          countryId={countryId}
           initialFilters={filters}
           beachRelatedData={{
             beachTypes,
@@ -151,7 +133,7 @@ export default async function CountryPage({
         initialCountries={convertedCountries}
         initialCities={convertedCities}
         countryIdFromPath={countryId}
-        cityIdFromUrl={cityId || ""}
+        cityIdFromUrl={cityId}
         hasMap={false}
       />
 

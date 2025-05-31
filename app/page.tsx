@@ -37,7 +37,7 @@ export default async function Home() {
   const sortedBeaches = beachesWithRating.sort(
     (a, b) => b.calculatedRating - a.calculatedRating
   );
-  const bestRatedBeaches = sortedBeaches.slice(0, 4);
+  const bestRatedBeaches = sortedBeaches.slice(0, 3);
 
   return (
     <div>

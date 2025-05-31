@@ -28,7 +28,6 @@ const formSchema = z.object({
 });
 
 interface FilterBeachesFormProps {
-  countryId: string;
   initialFilters: {
     cityId?: string;
     waterTypeId?: string;
@@ -43,7 +42,6 @@ interface FilterBeachesFormProps {
 }
 
 export default function FilterBeachesForm({
-  countryId,
   initialFilters,
   beachRelatedData,
 }: FilterBeachesFormProps) {
@@ -98,12 +96,12 @@ export default function FilterBeachesForm({
       waterType: "",
       beachTexture: "",
     });
-    if (initialFilters.cityId) {
-      router.push(`${pathname}?city=${initialFilters.cityId}`);
-    } else {
-      router.push(pathname);
-    }
-
+    // if (initialFilters.cityId) {
+    //   router.push(`${pathname}?city=${initialFilters.cityId}`);
+    // } else {
+    //   router.push(pathname);
+    // }
+    router.push(pathname);
     setIsFilterOpen(false);
   };
 
