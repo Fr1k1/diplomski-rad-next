@@ -57,7 +57,7 @@ export default function BeachFeaturesClient({
   );
 
   return (
-    <div className="grid grid-cols-4 gap-x-4 gap-y-1 items-center justify-center lg:items-baseline lg:justify-normal">
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-4 gap-y-1 items-center justify-center lg:items-baseline lg:justify-normal">
       {availableAmenities.length > 0 ? (
         availableAmenities.map((amenity: AmenityType, index) => (
           <div

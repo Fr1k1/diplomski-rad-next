@@ -34,11 +34,11 @@ export default function BeachDetailsClient({
         <div>
           <CarouselClient imageUrls={beachImages} />
         </div>
-        <div className="flex flex-col gap-6 lg:p-6">
+        <div className="flex flex-col gap-6 lg:p-6 mb-8 lg:mb-0">
           <div className="flex flex-row justify-between items-center">
             <div className="flex flex-col gap-1">
               <h2 className="font-extrabold text-3xl">{beach.name}</h2>
-              <div className="flex items-center gap-1">
+              <div className="flex flex-col items-center gap-1 lg:flex-row">
                 <Rating
                   readonly
                   size={25}
