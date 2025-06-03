@@ -6,11 +6,6 @@ import ScrollToTop from "@/components/ui/scrollToTop";
 import { ToastContainer } from "react-toastify";
 import ClientLayoutPart from "@/components/ui/ClientLayoutPart";
 
-// const nerkoOne = Nerko_One({
-//   subsets: ["latin"],
-//   weight: "400",
-// });
-
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
   : "http://localhost:3000";
