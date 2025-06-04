@@ -15,6 +15,7 @@ interface FormFieldCustomProps<T extends FieldValues> {
   label?: string;
   placeholder?: string;
   textarea?: boolean;
+  type?: string;
 }
 
 const FormFieldCustom = <T extends FieldValues>({
@@ -23,6 +24,7 @@ const FormFieldCustom = <T extends FieldValues>({
   label,
   placeholder = "",
   textarea = false,
+  type = "text",
 }: FormFieldCustomProps<T>) => {
   return (
     <FormField
@@ -35,7 +37,7 @@ const FormFieldCustom = <T extends FieldValues>({
             {textarea ? (
               <Textarea placeholder={placeholder} {...field} />
             ) : (
-              <Input placeholder={placeholder} {...field} />
+              <Input placeholder={placeholder} {...field} type={type} />
             )}
           </FormControl>
           <FormMessage />

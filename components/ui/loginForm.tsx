@@ -78,6 +78,7 @@ export function LoginForm() {
                 name="password"
                 placeholder="Password"
                 form={form}
+                type="password"
               />
             </div>
             {state?.error && (
