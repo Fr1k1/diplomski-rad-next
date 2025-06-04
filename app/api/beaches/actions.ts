@@ -184,73 +184,78 @@ export async function addBeach(prevState: any, formData: FormData) {
   }
 
   try {
-    const beach = await prisma.beaches.create({
-      data: {
-        name: validationResult.data.name,
-        address: validationResult.data.address,
-        beach_type_id: Number(validationResult.data.beachTypeId),
-        beach_depth_id: Number(validationResult.data.beachDepthId),
-        beach_texture_id: Number(validationResult.data.beachTextureId),
-        city_id: Number(validationResult.data.cityId),
-        working_hours: validationResult.data.working_hours,
-        description: validationResult.data.description,
-        best_time_to_visit: validationResult.data.best_time_to_visit,
-        local_wildlife: validationResult.data.local_wildlife,
-        restaurants_and_bars_nearby:
-          validationResult.data.restaurants_and_bars_nearby,
-        user_id: validationResult.data.userId,
-        approved: false,
-      },
+    const result = await prisma.$transaction(async (tx) => {
+      const beach = await tx.beaches.create({
+        data: {
+          name: validationResult.data.name,
+          address: validationResult.data.address,
+          beach_type_id: Number(validationResult.data.beachTypeId),
+          beach_depth_id: Number(validationResult.data.beachDepthId),
+          beach_texture_id: Number(validationResult.data.beachTextureId),
+          city_id: Number(validationResult.data.cityId),
+          working_hours: validationResult.data.working_hours,
+          description: validationResult.data.description,
+          best_time_to_visit: validationResult.data.best_time_to_visit,
+          local_wildlife: validationResult.data.local_wildlife,
+          restaurants_and_bars_nearby:
+            validationResult.data.restaurants_and_bars_nearby,
+          user_id: validationResult.data.userId,
+          approved: false,
+        },
+      });
+
+      if (
+        validationResult.data.characteristics &&
+        validationResult.data.characteristics.length > 0
+      ) {
+        await Promise.all(
+          validationResult.data.characteristics.map((charId) =>
+            tx.beach_has_characteristics.create({
+              data: {
+                featured: false,
+                beaches: {
+                  connect: { id: beach.id },
+                },
+                characteristics: {
+                  connect: { id: charId },
+                },
+              },
+            })
+          )
+        );
+      }
+
+      if (
+        validationResult.data.featured_items &&
+        validationResult.data.featured_items.length > 0
+      ) {
+        await Promise.all(
+          validationResult.data.featured_items.map((itemId) =>
+            tx.beach_has_characteristics.create({
+              data: {
+                featured: true,
+                beaches: {
+                  connect: { id: beach.id },
+                },
+                characteristics: {
+                  connect: { id: Number(itemId) },
+                },
+              },
+            })
+          )
+        );
+      }
+
+      return beach;
     });
 
-    if (
-      validationResult.data.characteristics &&
-      validationResult.data.characteristics.length > 0
-    ) {
-      await Promise.all(
-        validationResult.data.characteristics.map((charId) =>
-          prisma.beach_has_characteristics.create({
-            data: {
-              featured: false,
-              beaches: {
-                connect: { id: beach.id },
-              },
-              characteristics: {
-                connect: { id: charId },
-              },
-            },
-          })
-        )
-      );
-    }
-
-    if (
-      validationResult.data.featured_items &&
-      validationResult.data.featured_items.length > 0
-    ) {
-      await Promise.all(
-        validationResult.data.featured_items.map((itemId) =>
-          prisma.beach_has_characteristics.create({
-            data: {
-              featured: true,
-              beaches: {
-                connect: { id: beach.id },
-              },
-              characteristics: {
-                connect: { id: Number(itemId) },
-              },
-            },
-          })
-        )
-      );
-    }
     try {
-      await processBeachImages(beach.id, formData);
+      await processBeachImages(result.id, formData);
     } catch (imageError) {
       console.error("Error processing images:", imageError);
     }
 
-    return { success: true, data: beach };
+    return { success: true, data: result };
   } catch (error) {
     console.error("Error adding beach:", error);
     let errorMessage = "Failed to add beach";
